@@ -1,0 +1,10 @@
+<h1>List of jobs</h1>
+<ul> 
+  <!-- This loops through the jobs and creates the following html for each job-->
+  {% for job in jobs %} 
+  <li>
+    <!-- {{ vars }} this notation is used to print variable values -->
+    <p><b>Title</b>: {{ job['title'] }} <b>Description</b>: {{ job['job_description'] }}</p>
+  </li>
+  {% endfor %}
+</ul>

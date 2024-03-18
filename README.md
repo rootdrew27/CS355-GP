@@ -16,9 +16,15 @@
 
 - You're Good to Go.
 
+## Init the Database
+
+- To create a sqlite database with the commands specified in schema.sql, enter `python init_db.py` while in the db/ directory.
+
 ## Run the Website
 
-Using the terminal, while in the project folder, enter: `python app.py`. Then, type *localhost:8000* into your browser
+- Using the terminal, while in the project folder, enter: `python app.py`. Then, type *localhost:8000* into your browser.
+
+- If you set up the database try *localhost:8000/jobs*
 
 ## App Design
 
