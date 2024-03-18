@@ -1,9 +1,25 @@
-# CS355 Group Project
+## Setup Instructions  
 
-- Link to Doodle: https://doodle.com/meeting/participate/id/bm76Z9Ae
+- Install Python (the lastest stable version is fine). Make sure to **click** the "Add python.exe to PATH" checkbox.
 
-- Link to Project Ideas: https://universityofwieauclaire-my.sharepoint.com/:w:/g/personal/roota5351_uwec_edu/EYXPLAJgrEhOvpD0jzekHYEB6JLfEEqmg6n7Fu8-dTWW0Q
+- The following commards should be entered into the terminal: 
 
-- Link to Initial Report: https://universityofwieauclaire-my.sharepoint.com/:w:/g/personal/roota5351_uwec_edu/EWkcamWcwYxNq4KqArVXM9ABOT8tWUh-UjPieM3zEuOoUw?e=LcVZAt
+    1. create a virtual environment for your project: `python -m venv <your_venv_name>`
 
-- Link to SRS Doc: https://universityofwieauclaire-my.sharepoint.com/:w:/g/personal/roota5351_uwec_edu/EcnKFZozWhlLkq4obnjt2lkB6zfQmTx6m1rdR-jvey_sdA
+    2. Navigate into the \Scripts directory: `cd <your_venv_name>/Scripts` and activate the virtual env: `./activate`. Navigate back `cd ../`
+
+    3. Clone the repo into your venv: `git clone https://github.com/rootdrew27/CS355-GP.git`
+
+    4. Install the dependencies `python -m pip install -r requirements.txt`
+
+- You're Good to Go.
+
+## Run the Website
+
+Using the terminal, while in the project folder, enter: `python app.py`. Then, type *localhost:8000* into your browser
+
+## App Design
+
+- Currently, I am still learning about effective ways to model our app. For now, we will have all html files in the templates folder. (as intended by flask)
+
+- Otherwise, feel free to do whatever.
