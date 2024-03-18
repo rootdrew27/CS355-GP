@@ -1,3 +1,7 @@
+## IMPORTANT
+
+- Please push and pull from the dev branch. After cloning, switch to the dev branch `git switch dev` before editing and push to the remote dev branch `git push origin dev`
+
 ## Setup Instructions  
 
 - Install Python (the lastest stable version is fine). Make sure to **click** the "Add python.exe to PATH" checkbox.
