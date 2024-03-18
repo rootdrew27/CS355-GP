@@ -1,6 +1,6 @@
 ## IMPORTANT
 
-- Please push and pull from the dev branch. After cloning, switch to the dev branch `git switch dev` before editing and push to the remote dev branch `git push origin dev`
+- Please only push and pull to/from the **dev** branch. Thus, after cloning, switch to the dev branch: `git switch dev`. This should set your dev branch to track origin/dev, which is the remote dev branch. To push, use `git push origin dev`, just to be safe
 
 ## Setup Instructions  
 
