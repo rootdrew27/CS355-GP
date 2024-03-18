@@ -12,6 +12,8 @@
 
     4. Install the dependencies `python -m pip install -r requirements.txt`
 
+- When working on and running the website. Make sure to activate the virtual environment that you created (See step 2). 
+
 - You're Good to Go.
 
 ## Run the Website
