@@ -1,0 +1,7 @@
+{
+    "SESSION_TYPE": "memcached",
+    "SESSION_PERMANENT": true,
+    "PERMANENT_SESSION_LIFETIME": 3600,
+    "SESSION_REFRESH_EACH_REQUEST": true,
+    "SECRET_KEY": "JF*FIWazxa3" 
+}

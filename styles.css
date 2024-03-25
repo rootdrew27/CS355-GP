@@ -1,0 +1,21 @@
+.navbar-brand{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    color: #3f51b5;
+}
+.btn-primary, .btn-outline-primary{
+    background-color: #3f51b5;
+    color: white;
+}
+.form-control{
+    border: 1px solid black;
+}
+
+#row1{
+    height: 500px;
+    background-color: lightblue;
+    
+}
+.nav-item{
+    font-size: 16px;
+}
