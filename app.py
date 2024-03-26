@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # home view
 @app.route('/')
-def home():
+def index():
     endpoint = url_for('job_finder')
     return render_template('index.html', endpoint=endpoint)
 
@@ -51,7 +51,7 @@ def login(prev_page:str=None):
 def job_finder():
     # get all jobs
     conn = get_db_conn()
-    jobs = conn.execute('SELECT * FROM jobs').fetchall()
+    jobs = conn.execute('SELECT * FROM job').fetchall()
     conn.close()
     return render_template('jobs.html', jobs=jobs)
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
 
 
-    # url for style sheet (use in templates)
-    # url_for('static', filename='style.css')
+
+
 
 

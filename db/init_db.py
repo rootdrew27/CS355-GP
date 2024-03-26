@@ -4,8 +4,8 @@ import sqlite3
 connection = sqlite3.connect('database.db')
 
 # execute table creation 
-# this will fail if the table has already been created!!
-with open('schema.sql') as f:
+# this will fail if the table has already been created
+with open('./db/schema.sql') as f:
     connection.executescript(f.read())
 
 connection.commit()
