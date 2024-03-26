@@ -1,4 +1,4 @@
-{
+{  
     "SESSION_TYPE": "memcached",
     "SESSION_PERMANENT": true,
     "PERMANENT_SESSION_LIFETIME": 3600,

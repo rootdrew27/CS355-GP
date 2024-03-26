@@ -1,10 +1,28 @@
-<h1>List of jobs</h1>
-<ul> 
+
+
+{% extends "base.html" %}
+
+{% block content %}
   <!-- This loops through the jobs and creates the following html for each job-->
-  {% for job in jobs %} 
-  <li>
-    <!-- {{ vars }} this notation is used to print variable values -->
-    <p><b>Title</b>: {{ job['title'] }} <b>Description</b>: {{ job['job_description'] }}</p>
-  </li>
+  <div class="container">
+    <h3>Jobs</h3>
+
+    {% for job in jobs %} 
+    <div class="card m-1 w-75 mx-auto"> <!-- https://getbootstrap.com/docs/5.3/components/card/ -->
+      <div class="row g-0">
+        <div class="col-md-3">
+          <img src="" class="img-fluid rounded-start" alt=""> <!-- Optional image-->
+        </div>
+        <div class="col-md-9">
+          <div class="card-body ">
+            <h5 class="card-title">{{ job['title'] }}</h5>     <!-- {{ vars }} this notation is used to print variable values -->
+            <p class="card-text">{{ job['job_descrip'] }}</p>
+            <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
   {% endfor %}
-</ul>
+  </div>
+
+{% endblock %}
