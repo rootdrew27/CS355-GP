@@ -6,6 +6,8 @@ CREATE TABLE user (
     id INTEGER PRIMARY KEY,
     first_n TEXT NOT NULL,
     last_n TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
     permission_level INT NOT NULL DEFAULT 0
 );
 
@@ -32,7 +34,3 @@ CREATE TABLE job (
 
 -- examples
 
-INSERT INTO user (first_n, last_n, permission_level) VALUES ('Steve', 'Thestudent', 0);
-INSERT INTO user (first_n, last_n, permission_level) VALUES ('Suzy', 'Theteacher', 1);
-INSERT INTO department (title, descrip) VALUES ('Computer Science', 'A department for computer stuff');
-INSERT INTO job (title, descrip, user_id, dept_id) VALUES ('Programmer', 'Write Programs', 2, 1);

@@ -6,7 +6,7 @@ import sqlite3
 from markupsafe import escape
 from datetime import timedelta
 import json
-
+import hashlib
 
 app = Flask(__name__)
 
@@ -16,13 +16,15 @@ app = Flask(__name__)
 # app.config['SESSION_PERMANENT'] = True # session are persisent, thus they are not ended when the brwoser closes
 # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60) # sessions lasts for 60 minutes unless renewed or explicitly cancelled.
 # app.config['SESSION_REFRESH_EACH_REQUEST'] = True # session renew feature is enabled
-#app.secret_key = b'JF*FIWazxa3' 
+app.secret_key = b'JF*FIWazxa3' 
 
 ######################## VIEWS #####################################
 
 # home view
 @app.route('/')
 def index():
+    x = True if 'email' in session else False
+    app.logger.debug('Session is started ' + str(x))
     endpoint = url_for('job_finder')
     return render_template('index.html', endpoint=endpoint)
 
@@ -33,15 +35,21 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login(prev_page:str=None):
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
-        # query database to verify user
+        # password = hashlib.md5(request.form['password'].encode('utf-8'))
 
-        # create session
-        session['username'] = username
+        # query database to verify user
+        conn = get_db_conn()
+        conn.execute(f"SELECT * FROM user WHERE email='{email}' AND password='{password}'")
+
+        # start session
+        session['email'] = email
 
         if prev_page == None:
             return redirect(url_for('index'))
+        
+        return redirect(url_for(prev_page))
         
     # else, its a GET request
     return render_template('login.html')
