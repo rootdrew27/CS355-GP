@@ -31,16 +31,20 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-def login(prev_page: str):
+def login(prev_page:str=None):
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for(prev_page))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+        username = request.form['username']
+        password = request.form['password']
+        # query database to verify user
+
+        # create session
+        session['username'] = username
+
+        if prev_page == None:
+            return redirect(url_for('index'))
+        
+    # else, its a GET request
+    return render_template('login.html')
 
 # job list view
 @app.get('/jobs')
@@ -55,6 +59,11 @@ def job_finder():
 def job_page():
     pass
 
+@app.post('/jobs/<int:job_id>/apply')
+def apply(job_id):
+    # apply for the job (notify the poster and store info in db)
+    # or redirect the client to the login page.
+    pass
 
 ################## HELPER FUNCTIONS #################################
 def get_db_conn():
