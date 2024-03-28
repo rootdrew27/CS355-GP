@@ -8,10 +8,10 @@
     <h3>Jobs</h3>
     <hr>
     {% for job in jobs %} 
-    <div class="card m-1 w-75 mx-auto"> <!-- https://getbootstrap.com/docs/5.3/components/card/ -->
+    <div class="card m-1 w-75 mx-auto" style="max-height: 200px;"> <!-- https://getbootstrap.com/docs/5.3/components/card/ -->
       <div class="row g-0">
         <div class="col-md-3">
-          <img src="../static/images/programmer.jpg" class="img-fluid rounded-start" alt=""> <!-- Optional image-->
+          <img src="{{ job['img_path'] }}" class="card-img h-100 object-fit-cover rounded-start" alt="" style="max-height: 200px;"> <!-- Optional image-->
         </div>
         <div class="col-md-9">
           <div class="card-body ">            

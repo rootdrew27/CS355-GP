@@ -22,6 +22,7 @@ CREATE TABLE job (
     title TEXT NOT NULL,
     date_listed NUMERIC NOT NULL DEFAULT (date('now', 'localtime')),
     descrip TEXT NOT NULL,
+    img_path TEXT,
     user_id INTEGER,
     dept_id INTEGER,
     CONSTRAINT fk_user FOREIGN KEY (user_id)  --the user that posted the job 

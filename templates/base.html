@@ -25,9 +25,16 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link"> Profile</a>
                 </li>
-                <li class="nav-item">
-                  <a href="./login" type="button" class="btn btn-outline-primary" role="button">Login</a>
-                </li>
+                {% if is_logged_in %}
+                  <li id="greetings" class="nav-item ms-2 mt-1 fw-bold">
+                    <h4>Hello {{ session['first_n'] }}</h4>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a href="./login" type="button" class="btn btn-outline-primary" role="button">Login</a>
+                  </li>
+                {% endif %}
+
             </ul>
         </div>
         <form class="d-flex">
@@ -37,7 +44,7 @@
     </nav>
   
     <div class="container">              <!--12 column sizes in 1 row hard-coded, can choose with numbers OR auto-->
-      <div class="row" id="row1">
+      <div class="row">
           {% block content %} {% endblock %}
       </div>
   </div>

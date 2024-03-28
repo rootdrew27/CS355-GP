@@ -16,7 +16,7 @@ app = Flask(__name__)
 # app.config['SESSION_PERMANENT'] = True # session are persisent, thus they are not ended when the brwoser closes
 # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60) # sessions lasts for 60 minutes unless renewed or explicitly cancelled.
 # app.config['SESSION_REFRESH_EACH_REQUEST'] = True # session renew feature is enabled
-app.secret_key = b'JF*FIWazxa3' 
+app.secret_key = b'JF*FIWazxc3' 
 
 ######################## VIEWS #####################################
 
@@ -25,7 +25,7 @@ app.secret_key = b'JF*FIWazxa3'
 def index():
     x = is_logged_in()
     app.logger.debug('Session is started: ' + str(x))
-    return render_template('index.html')
+    return render_template('index.html', is_logged_in=is_logged_in(), session=session)
 
 @app.route('/register')
 def register():
@@ -35,13 +35,15 @@ def register():
 def login(prev_page:str=None):
     if request.method == 'POST':
         email = request.form['email']
-        password = hashlib.md5(request.form['password'].encode('utf-8')) #encrypted password
+        password = request.form['password'] #encrypted password
 
         # query database to verify user
         conn = get_db_conn()
-        if conn.execute(f"SELECT * FROM user WHERE email='{email}' AND password='{password}'").rowcount < 1: # ie no rows match
+        result = conn.execute(f"SELECT first_n FROM user WHERE email='{email}' AND password='{password}'").fetchall()
+        if len(result) == 1:
             # start session
             session['email'] = email
+            session['first_n'] = result[0][0]
 
         else: # invalid credentials
             return "Invalid Credentials. Try Again!"
@@ -63,7 +65,7 @@ def job_finder():
     conn = get_db_conn()
     jobs = conn.execute('SELECT * FROM job').fetchall()
     conn.close()
-    return render_template('jobs.html', jobs=jobs)
+    return render_template('jobs.html', jobs=jobs, is_logged_in=is_logged_in(), session=session)
 
 @app.get('/jobs/<int:job_id>')
 def get_job_info(job_id):
