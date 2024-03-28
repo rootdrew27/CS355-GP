@@ -25,8 +25,7 @@ app.secret_key = b'JF*FIWazxa3'
 def index():
     x = True if 'email' in session else False
     app.logger.debug('Session is started ' + str(x))
-    endpoint = url_for('job_finder')
-    return render_template('index.html', endpoint=endpoint)
+    return render_template('index.html')
 
 @app.route('/register')
 def register():
@@ -36,15 +35,17 @@ def register():
 def login(prev_page:str=None):
     if request.method == 'POST':
         email = request.form['email']
-        password = request.form['password']
-        # password = hashlib.md5(request.form['password'].encode('utf-8'))
+        password = hashlib.md5(request.form['password'].encode('utf-8')) #encrypted password
 
         # query database to verify user
         conn = get_db_conn()
-        conn.execute(f"SELECT * FROM user WHERE email='{email}' AND password='{password}'")
+        if conn.execute(f"SELECT * FROM user WHERE email='{email}' AND password='{password}'").rowcount < 1: # ie no rows match
+            # start session
+            session['email'] = email
 
-        # start session
-        session['email'] = email
+        else: # invalid credentials
+            return "Invalid Credentials. Try Again!"
+
 
         if prev_page == None:
             return redirect(url_for('index'))
@@ -65,13 +66,11 @@ def job_finder():
 
 @app.get('/jobs/<int:job_id>')
 def job_page():
-    pass
-
-@app.post('/jobs/<int:job_id>/apply')
-def apply(job_id):
     # apply for the job (notify the poster and store info in db)
+
     # or redirect the client to the login page.
     pass
+
 
 ################## HELPER FUNCTIONS #################################
 def get_db_conn():
@@ -83,6 +82,9 @@ def get_db_conn():
     conn = sqlite3.connect('./db/database.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+def is_logged_in() -> bool:
+    return True if 'email' in session else False
 
 perm_lvls = {0: 'default', 1: 'student', 2: 'faculty'}
 

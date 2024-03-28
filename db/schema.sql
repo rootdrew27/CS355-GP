@@ -6,7 +6,7 @@ CREATE TABLE user (
     id INTEGER PRIMARY KEY,
     first_n TEXT NOT NULL,
     last_n TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     permission_level INT NOT NULL DEFAULT 0
 );
