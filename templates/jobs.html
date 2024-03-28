@@ -14,16 +14,70 @@
           <img src="../static/images/programmer.jpg" class="img-fluid rounded-start" alt=""> <!-- Optional image-->
         </div>
         <div class="col-md-9">
-          <div class="card-body ">
+          <div class="card-body ">            
             <h5 class="card-title fw-bold">{{ job['title'] }}</h5>     <!-- {{ vars }} this notation is used to print variable values -->
+            <p id="jobId" hidden>{{ job['id'] }}</p>
             <p class="card-text">{{ job['descrip'] }}</p>
             <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
-            <button class="btn btn-primary">Learn More</button>
+            <button class="btn btn-primary learnMore" data-bs-toggle="modal" data-bs-target="#learnMore">Learn More</button>   <!-- Button trigger modal -->
           </div>
         </div>
       </div>
     </div>
   {% endfor %}
   </div>
+  
 
+
+  <!-- Modal -->
+  <div class="modal fade" id="learnMore" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="jobTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="jobTitle"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">          
+          <p id="description" class="card-text"></p>
+          <p class="card-text"><small id="date_listed" class="text-body-secondary"></small></p>          
+          <button id="apply" class="btn btn-primary">Apply</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}
+
+{% block script %}
+<script>
+  document.querySelectorAll('.btn.learnMore').forEach((btn) => {
+    
+    btn.addEventListener('click', (event) => {
+      jobId = event.target.parentElement.querySelector('#jobId').innerText
+
+      titleEle = document.getElementById('jobTitle');
+      descripEle = document.getElementById('description');
+      dateListedEle = document.getElementById('date_listed');
+
+      const req = new XMLHttpRequest();
+
+      //populate the modal with the selected job info
+      req.addEventListener("load", () => {
+        let res = req.response;
+        titleEle.innerText = res['title'];
+        descripEle.innerText = res['descrip'];
+        dateListedEle.innerText = res['date_listed'];
+
+      });
+      req.open("GET", "jobs/" + jobId);
+      req.responseType = "json";
+      req.send();
+
+      //title = document.getElementById('staticBackdropLabel');
+      //title.innerText = null; 
+    });
+  });
+</script>
 {% endblock %}

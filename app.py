@@ -23,8 +23,8 @@ app.secret_key = b'JF*FIWazxa3'
 # home view
 @app.route('/')
 def index():
-    x = True if 'email' in session else False
-    app.logger.debug('Session is started ' + str(x))
+    x = is_logged_in()
+    app.logger.debug('Session is started: ' + str(x))
     return render_template('index.html')
 
 @app.route('/register')
@@ -45,7 +45,8 @@ def login(prev_page:str=None):
 
         else: # invalid credentials
             return "Invalid Credentials. Try Again!"
-
+        
+        conn.close()
 
         if prev_page == None:
             return redirect(url_for('index'))
@@ -65,7 +66,22 @@ def job_finder():
     return render_template('jobs.html', jobs=jobs)
 
 @app.get('/jobs/<int:job_id>')
-def job_page():
+def get_job_info(job_id):
+    conn = get_db_conn()
+    job = conn.execute(f'SELECT * FROM job WHERE id = {job_id}').fetchall()
+    conn.close()
+
+    if job != None:
+        job = job[0]
+        return {
+                'title': job['title'],
+                'date_listed': job['date_listed'],
+                'descrip': job['descrip']                
+            } 
+
+
+@app.post('/<int:job_id>')
+def apply():
     # apply for the job (notify the poster and store info in db)
 
     # or redirect the client to the login page.

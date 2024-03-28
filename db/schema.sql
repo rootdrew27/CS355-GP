@@ -32,5 +32,6 @@ CREATE TABLE job (
         ON DELETE CASCADE ON UPDATE CASCADE  
 );
 
--- examples
+-- TODO
+-- Create table to 
 
