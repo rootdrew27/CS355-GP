@@ -16,7 +16,7 @@ app = Flask(__name__)
 # app.config['SESSION_PERMANENT'] = True # session are persisent, thus they are not ended when the brwoser closes
 # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60) # sessions lasts for 60 minutes unless renewed or explicitly cancelled.
 # app.config['SESSION_REFRESH_EACH_REQUEST'] = True # session renew feature is enabled
-app.secret_key = b'JF*FIWazxc3' 
+app.secret_key = b'JF*FaWazxc3' 
 
 ######################## VIEWS #####################################
 

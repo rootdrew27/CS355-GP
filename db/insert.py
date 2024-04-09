@@ -5,8 +5,7 @@ import hashlib
 connection = sqlite3.connect('./db/database.db')
 
 cur = connection.cursor()
+cur.execute(f"INSERT INTO job (title, descrip, img_path, user_id) VALUES ('Hacker', 'Hack peoples stuff.', '../static/images/hacker.jpg', 2)")
 
-print(cur.execute(f"Select first_n from user WHERE email='Steve@gmail.com'").fetchall()[0][0])
-
-
+connection.close()
 
