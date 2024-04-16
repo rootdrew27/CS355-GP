@@ -89,6 +89,9 @@ def apply():
     # or redirect the client to the login page.
     pass
 
+@app.route('/department')
+def department():
+  return render_template('department.html')
 
 ################## HELPER FUNCTIONS #################################
 def get_db_conn():
