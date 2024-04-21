@@ -79,6 +79,9 @@ def get_job_info(job_id):
                 'descrip': job['descrip']                
             } 
 
+@app.route('/department')
+def department():
+  return render_template('department.html')
 
 @app.post('/<int:job_id>')
 def apply():
