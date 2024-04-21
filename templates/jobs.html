@@ -1,5 +1,3 @@
-
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -7,28 +5,38 @@
   <div class="container">
     <h3>Jobs</h3>
     <hr>
-    {% for job in jobs %} 
-    <div class="card m-1 w-75 mx-auto" style="max-height: 200px;"> <!-- https://getbootstrap.com/docs/5.3/components/card/ -->
-      <div class="row g-0">
-        <div class="col-md-3">
-          <img src="{{ job['img_path'] }}" class="card-img h-100 object-fit-cover rounded-start" alt="" style="max-height: 200px;"> <!-- Optional image-->
-        </div>
-        <div class="col-md-9">
-          <div class="card-body ">            
-            <h5 class="card-title fw-bold">{{ job['title'] }}</h5>     <!-- {{ vars }} this notation is used to print variable values -->
-            <p id="jobId" hidden>{{ job['id'] }}</p>
-            <p class="card-text">{{ job['descrip'] }}</p>
-            <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
-            <button class="btn btn-primary learnMore" data-bs-toggle="modal" data-bs-target="#learnMore">Learn More</button>   <!-- Button trigger modal -->
+    <div class="card-deck overflow-y-auto">
+      {% for job in jobs %} 
+      <div class="card m-1 w-75 mx-auto" style="height: 200px;max-width: 100%;"> <!-- https://getbootstrap.com/docs/5.3/components/card/ -->
+        <div class="row g-0">
+          <div class="col-md-3">
+            <img src="{{ job['img_path'] }}" class="img-fluid rounded-start object-fit-cover h-100" alt="" style="height: 100%; width: 100%; object-fit: cover;"> <!-- Optional image-->
+          </div>
+          <div class="col-md-7">
+            <div class="card-body">            
+              <h5 class="card-title fw-bold">{{ job['job_title'] }}</h5>     <!-- {{ vars }} this notation is used to print variable values -->
+              <p id="jobId" hidden>{{ job['job_id'] }}</p>
+              <p class="card-text">Posted by: {{ job['first_n'] }}</p>
+              {% if job['dept_title'] != None %}
+                <p class="card-text">Department: {{ job['dept_title'] }}</p>              
+              {% endif %}
+  
+              <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
+              <div class="hidden-text" style="display: none;">
+                <p class="card-text">{{ job['job_descrip'] }}</p>
+              </div>
+            </div>          
+          </div>
+          <div class="col-md-2 flex-column d-flex">
+            <button class="btn btn-primary learnMore mt-5 m-2" data-bs-toggle="modal" data-bs-target="#learnMore">Learn More</button>   <!-- Button trigger modal -->
+            <button class="btn btn-secondary apply m-2">Apply</button>
           </div>
         </div>
-      </div>
-    </div>
-  {% endfor %}
+      </div>    
+    {% endfor %}
   </div>
+</div>
   
-
-
   <!-- Modal -->
   <div class="modal fade" id="learnMore" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="jobTitle" aria-hidden="true">
     <div class="modal-dialog">
@@ -52,9 +60,29 @@
 
 {% block script %}
 <script>
+
+  const expandBtn = document.querySelector('.expand-btn');
+  const card = document.querySelector('.card');
+  const hiddenText = document.querySelector('.hidden-text');
+  
+  expandBtn.addEventListener('click', () => {
+    card.classList.toggle('expanded');
+    hiddenText.style.display = hiddenText.style.display === 'none' ? 'block' : 'none';
+  });
+
+  //Modal vars
+
+  let jobId;
+  let titleEle; 
+  let descripEle;
+  let dateListedEle;
+
+  //Job Modal Event
   document.querySelectorAll('.btn.learnMore').forEach((btn) => {
     
+    //Activate Job Modal
     btn.addEventListener('click', (event) => {
+
       jobId = event.target.parentElement.querySelector('#jobId').innerText
 
       titleEle = document.getElementById('jobTitle');
@@ -76,8 +104,22 @@
       req.send();
 
       //title = document.getElementById('staticBackdropLabel');
-      //title.innerText = null; 
+      //title.innerText = null
     });
   });
+  //Apply
+  document.getElementById('apply').addEventListener('click', (event) => {
+    const req = new XMLHttpRequest();
+
+    req.addEventListener("load", () => {
+      let res = req.response;
+
+    });
+    req.open('GET', 'jobs/' + jobId + '/apply');
+    req.responseType = 'json';
+    req.send();
+
+  });
+
 </script>
 {% endblock %}

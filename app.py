@@ -58,12 +58,17 @@ def login(prev_page:str=None):
     # else, its a GET request
     return render_template('login.html')
 
+@app.route('/logout', methods=['GET'])
+def logout():
+    session['email'].pop()
+    return
+
 # job list view
 @app.get('/jobs')
 def job_finder():
     # get all jobs
     conn = get_db_conn()
-    jobs = conn.execute('SELECT * FROM job').fetchall()
+    jobs = conn.execute('SELECT job.id AS "job_id", job.title AS "job_title", job.date_listed, job.descrip AS "job_descrip", job.img_path, department.title AS "dept_title", user.first_n FROM job LEFT JOIN user ON job.user_id = user.id LEFT JOIN department ON job.dept_id = department.id;').fetchall()
     conn.close()
     return render_template('jobs.html', jobs=jobs, is_logged_in=is_logged_in(), session=session)
 
@@ -81,15 +86,16 @@ def get_job_info(job_id):
                 'descrip': job['descrip']                
             } 
 
-@app.route('/department')
-def department():
-  return render_template('department.html')
-
-@app.post('/<int:job_id>')
-def apply():
-    # apply for the job (notify the poster and store info in db)
+@app.route('/jobs/<int:job_id>/apply')
+def apply(job_id):
+        # apply for the job (notify the poster and store info in db)
 
     # or redirect the client to the login page.
+ pass   
+#    if session['email'] is not None:
+
+@app.route('/profile')
+def student_profile():
     pass
 
 @app.route('/department')
