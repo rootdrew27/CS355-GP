@@ -1,0 +1,8 @@
+Ruby/Megan
+ - register and login html
+Mack
+ - department html 
+Andrew
+ - apply sessions to all functions and expand database
+Ryan
+ - profile html page
