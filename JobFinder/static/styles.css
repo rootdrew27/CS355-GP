@@ -19,3 +19,7 @@
 .nav-item{
     font-size: 16px;
 }
+
+.expanded {
+    transform: scale(1.2);
+  }
