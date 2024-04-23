@@ -1,8 +1,10 @@
 import sqlite3
-import os
+import smtplib, ssl
 from flask import session
+import JobFinder
 
 ################## HELPER FUNCTIONS #################################
+
 def get_db_conn():
     """Create a connection to the database
 
@@ -15,3 +17,36 @@ def get_db_conn():
 
 def is_logged_in() -> bool:
     return True if 'email' in session else False
+
+
+SECRETS = None
+import json
+with open('secrets.json') as json_file:
+    SECRETS = json.load(json_file)
+
+port = 465
+sender = SECRETS['sender_email']
+password = SECRETS['password']
+
+def send_dfa_token(receiver):
+    try:
+        token = session['token']
+
+        message = f"""
+        Subject: DFA TOKEN
+
+        Token: {token}
+        """
+
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(sender, password)
+            output = server.sendmail(sender, receiver, message)
+            JobFinder.logger.info(f"Email sent to {receiver}. Info: {output}")
+
+    except Exception as e: 
+        JobFinder.logger.error("Error: ", e)
+
+
+
