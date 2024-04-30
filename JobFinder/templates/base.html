@@ -11,14 +11,11 @@
       <!-- header/navbar-->
       <nav class="navbar navbar-expand">
         <div class="container-md" style="justify-content: start;" >
-            <a href="#" class="navbar-brand">
+            <a href={{ url_for('views.index') }} class="navbar-brand">
                 <img class="d-inline-block align-center" src="../static/images/uwec.png" width="200px">
                 Job Finder
             </a>
             <ul class="navbar-nav">
-                <li class="nav-item">               <!--should the home be canceled out because of the brand technically being the 'home' link ?-->
-                    <a href={{ url_for('views.index') }} class="nav-link active"> Home</a>       <!-- active makes it bolded when on that specific page-->
-                </li>
                 <li class="nav-item">
                     <a href={{ url_for('views.job_finder') }} class="nav-link"> Jobs</a>
                 </li>

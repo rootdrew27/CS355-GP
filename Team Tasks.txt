@@ -1,7 +1,8 @@
 Ruby/Megan
  - register and login html
-Mack
+McKenzie
  - department html 
+ - started on final presentation powerpoint (shared with everyone)
 Andrew
  - apply sessions to all functions and expand database
 Ryan
