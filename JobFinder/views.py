@@ -42,18 +42,22 @@ def get_job_info(job_id):
                 'descrip': job['descrip']                
             } 
 
-@views.route('/jobs/<int:job_id>/apply')
+@views.route('/jobs/apply/<int:job_id>')
 def apply(job_id):
-        # apply for the job (notify the poster and store info in db)
+    # apply for the job (notify the poster and store info in db)
 
     # or redirect the client to the login page.
  pass   
 #    if session['email'] is not None:
 
-@views.route('/profile')
+@views.route('/student_profile')
 def student_profile():
-    pass
+    return render_template('profile.html', session = session)
 
 @views.route('/department')
 def department():
   return render_template('department.html')
+
+@views.route('/department_profile')
+def department_profile():
+   pass

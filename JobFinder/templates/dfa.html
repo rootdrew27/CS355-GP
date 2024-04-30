@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container d-flex justify-content-center">
+    <form action="./dfa" method="POST"  style="width: 500px; margin-right: 5px; margin-top: 40px; border: 2px solid rgb(162, 162, 162); padding: 40px; border-radius: 5px;">
+      <div  style="text-align: center;">
+        <h2 style="color: #3f51b5; margin-bottom: 15px;">Dual Factor Token</h2>
+        <h6 style="color: rgb(162, 162, 162);">Please enter your token below.</h6>
+        <br>
+      </div>
+
+          <!-- Email input -->
+           <div data-mdb-input-init class="form-outline mb-4" >
+            <input type="password" id="form2Example1" name="token" class="form-control" placeholder=>
+          </div>
+        
+          <!-- Submit button -->
+          <div class = "text-center">
+            <button type="submit" role="button" style="width: 200px;" data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Submit</button>
+          </div>
+      
+    </form>
+  </div> 
+{% endblock %}

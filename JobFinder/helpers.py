@@ -1,7 +1,7 @@
 import sqlite3
 import smtplib, ssl
 from flask import session
-import JobFinder
+from flask import current_app as app
 
 ################## HELPER FUNCTIONS #################################
 
@@ -43,10 +43,10 @@ def send_dfa_token(receiver):
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
             server.login(sender, password)
             output = server.sendmail(sender, receiver, message)
-            JobFinder.logger.info(f"Email sent to {receiver}. Info: {output}")
+            app.logger.info(f"\nAttempted to send email to {receiver}.\n Info: {output}")
 
     except Exception as e: 
-        JobFinder.logger.error("Error: ", e)
+        app.logger.error("Error: ", e)
 
 
 

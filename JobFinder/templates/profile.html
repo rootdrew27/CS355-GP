@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+        <div class="avatar me-3">
+          <img src="{{ session['avatar_img_path'] }}" alt="{{ session['first_n'] }}" class="rounded-circle" style="width: 64px; height: 64px;">
+        </div>
+        <div>
+          <h5 class="card-title">{{ session['first_n'] + ' ' + session['last_n'] }}</h5>
+          <p class="card-text">
+            {# Following: {{  }} users<br> #}
+            {# Followed by: {{ user.followers|length }} users #}
+          </p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-4">
+          <p class="mb-0">Total activity</p>
+          {# <h5>{{ user.total_activity }}</h5> #}
+        </div>
+        <div class="col-sm-4">
+          <p class="mb-0">Last activity</p>
+          {# <h5>{{ user.last_activity_date }}</h5> #}
+        </div>
+        <div class="col-sm-4">
+          <p class="mb-0">Member since</p>
+          {# <h5>{{ user.member_since_date }}</h5> #}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-4">
+          <p class="mb-0">Votes</p>
+          {# <h5>{{ user.votes }}</h5> #}
+        </div>
+        <div class="col-sm-4">
+          <p class="mb-0">Subscriptions</p>
+          {# <h5>{{ user.subscriptions }}</h5> #}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

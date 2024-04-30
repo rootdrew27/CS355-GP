@@ -33,13 +33,13 @@
         
             <div class="col">
               <!-- Simple link -->
-              <a href="#!">Forgot password?</a>
+              <a href={{ url_for('auth.forgot_password') }}>Forgot password?</a>
             </div>
           </div>
         
           <!-- Submit button -->
           <div class = "text-center">
-          <button type="button" style="width: 200px;" data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Login</button>
+          <button type="submit" role="button" style="width: 200px;" data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Login</button>
           </div>
       
     </form>
