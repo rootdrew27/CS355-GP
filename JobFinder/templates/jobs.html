@@ -13,7 +13,7 @@
       <div class="row w-100 gx-5">
       
       {% for job in jobs %} 
-      <div class="col-lg-6 mb-5">
+      {# <div class="col-lg-12 mb-5">
         <div class="card h-100 mx-auto w-75 shadow border-0">
             <img class="card-img-top" style="max-height:250px;" src={{ job['img_path']}} alt="...">
             <div class="card-body p-4">
@@ -35,13 +35,13 @@
                 </div>
             </div>
         </div>
-      </div>
+      </div> #}
 
 
-{#  
+ 
         {% set id = job['job_id']|string %}
         {% set descripID = "descrip" ~ id %}
-        <div class="card m-1 w-75 mx-auto" style="min-height: 125px;max-width: 100%;">
+        <div class="card m-1 w-100 mx-auto shadow border-0" style="min-height: 125px;max-width: 100%;">
           <div class="row g-0 h-100">
             <div class="col-md-3">
               <img src="{{ job['img_path'] }}" class="img-fluid rounded-start" alt="" style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
@@ -70,7 +70,7 @@
             </div>
           </div>            
         </div>
-      </div>     #}
+      </div>    
     {% endfor %}
     </div>
   </div>
