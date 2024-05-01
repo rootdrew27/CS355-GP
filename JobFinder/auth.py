@@ -38,9 +38,7 @@ def login():
         else: # invalid credentials
             flash('Email or Password were invalid!', category='error')
             return render_template('login.html')
-
-
-        
+  
     # else, its a GET request
     return render_template('login.html')
 

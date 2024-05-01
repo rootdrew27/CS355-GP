@@ -4,6 +4,41 @@ McKenzie
  - department html 
  - started on final presentation powerpoint (shared with everyone)
 Andrew
- - apply sessions to all functions and expand database
+
 Ryan
  - profile html page
+
+
+General Tasks:
+  Job Listing Page
+    - Populate the apply modal using AJAX
+    - Add filters
+    - Add Search bar
+    - Style improvements
+
+  Profile Page
+   - Set up form to upload Resume/Transcript
+
+  Department Page
+    - 
+
+
+Features CheckList: (Tasks that are complete are marked Done)
+
+Login - Done
+Register
+DFA - Done
+
+Create Job 
+Edit/Delete Job
+
+Apply for Job
+
+Filter Jobs
+Search Jobs
+
+Upload Resume
+Upload Transcript
+Edit Info
+
+Create Department
