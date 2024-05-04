@@ -14,7 +14,9 @@ CREATE TABLE user (
 CREATE TABLE department (
     id INTEGER PRIMARY KEY,
     title TEXT NOT NULL UNIQUE,
-    descrip TEXT NOT NULL
+    descrip TEXT NOT NULL,
+    website_url TEXT NOT NULL,
+    email TEXT NOT NULL
 );
 
 CREATE TABLE job (

@@ -62,8 +62,17 @@ def student_profile():
 
 @views.route('/department')
 def department():
-  return render_template('department.html')
+    # get desired department
+    conn = get_db_conn()
+    jobs = conn.execute(
+        """SELECT job.id AS "job_id", job.title AS "job_title", job.date_listed, job.descrip AS "job_descrip", job.img_path, department.title AS "dept_title", user.first_n 
+            FROM job 
+            LEFT JOIN user ON job.user_id = user.id
+            LEFT JOIN department ON job.dept_id = department.id;"""
+    ).fetchall()
+    conn.close()
+    return render_template('department.html')
 
-@views.route('/department_profile')
+@views.route('/department_profile/<int:dept_id>')
 def department_profile():
-   pass
+    pass

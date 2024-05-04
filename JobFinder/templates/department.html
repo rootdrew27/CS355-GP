@@ -4,23 +4,59 @@
     <div class="container-fluid">
         <header class="row bg-primary text-white py-3">
             <div class="col">
-                <h1>{{ dept_name }}</h1>
+                <h1>{{ dept_title }}</h1>
             </div>
         </header>
 
         <main class="row mt-4">
             <div class="col-md-8">
-                <h2>About {{ dept_name }}</h2>
-                <p>{{ about_text }}</p>
+                <h2>About {{ dept_title }}</h2>
+                <p>{{ descrip }}</p>
             </div>
 
             <div class="col-md-4">
                 <h2>Contact Information</h2>
                 <p>Website: <a href="{{ website_url }}">{{ website_url }}</a></p>
                 <p>Email: <a href="mailto:{{ email }}">{{ email }}</a></p>
+            </div>
+        </main>
 
-                <h2>Jobs at {{ dept_name }}</h2>
+        <main class="row mt-4">
+            <div class="col-md-8">
+                <h2>Employment Openings</h2>
                 {% if jobs %}
+                    {% set id = department['department_id']|string %}
+                    {% set descripID = "descrip" ~ id %}
+                    <div class="card m-1 w-75 mx-auto" style="min-height: 125px;max-width: 100%;">
+                    <div class="row g-0 h-100">
+                        <div class="col-md-3">
+                        <img src="{{ job['img_path'] }}" class="img-fluid rounded-start" alt="" style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
+                        </div>
+                    <div class="col-md-7">
+                      <div class="card-body">            
+                        <h5 class="card-title fw-bold">{{ job['job_title'] }}</h5>
+                        <p id="jobId" hidden>{{ id }}</p>
+                        <p class="card-text">Posted by: {{ job['first_n'] }}</p>
+                        {% if job['dept_title'] != None %}
+                          <p class="card-text">Department: {{ job['dept_title'] }}</p>              
+                        {% endif %}
+                      
+                        <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
+        
+        
+                      </div>          
+                    </div>
+                    <div class="col-md-2 flex-column d-flex">
+                    <button class="btn btn-primary apply mt-5 m-2" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>   <!-- Button trigger modal -->
+                    <button class="btn btn-secondary m-2" data-bs-toggle="collapse" data-bs-target="#{{ descripID }}" aria-expanded="false">See More</button>
+                  </div>
+                  <div class="row">
+                    <div class="collapse multi-collapse" id="{{ descripID }}">
+                      <p class="card-text">{{ job['job_descrip'] }}</p>
+                    </div>
+                  </div>            
+                </div>
+
                 <div class="card-body">            
                     <h5 class="card-title fw-bold">Job Title: {{ job['job_title'] }}</h5>
                     <p id="jobId" hidden>{{ id }}</p>
