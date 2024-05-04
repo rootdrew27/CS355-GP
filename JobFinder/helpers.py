@@ -19,14 +19,14 @@ def is_logged_in() -> bool:
     return True if 'email' in session else False
 
 
-#SECRETS = None
-#import json
-#with open('secrets.json') as json_file:
+# SECRETS = None
+# import json
+# with open('secrets.json') as json_file:
 #    SECRETS = json.load(json_file)
 
-#port = 465
-#sender = SECRETS['sender_email']
-#password = SECRETS['password']
+# port = 465
+# sender = SECRETS['sender_email']
+# password = SECRETS['password']
 
 def send_dfa_token(receiver):
     try:
@@ -48,5 +48,11 @@ def send_dfa_token(receiver):
     except Exception as e: 
         app.logger.error("Error: ", e)
 
+
+
+ALLOWED_EXTENSIONS = {'txt', 'pdf'}
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 

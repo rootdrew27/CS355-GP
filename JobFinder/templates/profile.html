@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 
+{% block style%}
+<style>
+#resume {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+#transcript {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+
+label {
+   cursor: pointer;
+   /* Style as you please, it will become the visible UI component. */
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
+<div class="container py-5">
   <div class="card">
     <div class="card-body">
       <div class="d-flex align-items-center">
@@ -44,15 +64,46 @@
       </div>
       <hr>
       <div class="container">
-        <h5>Resume</h5>
-        <form>
-          <input type="file" id="resume" name="resumeUpload" accept=".doc, .docx, .pdf"/>
-          <br>
-          <br>
-          <button type="submit" role="button" style="width: 100px;" data-mdb-ripple-init class="btn btn-primary btn-block mb-4"> Upload </button>
+        <h5>Transcript</h5>
+        <form action="./upload_transcript" method="POST" id="transcript_form" enctype="multipart/form-data">
+          <label role="button" for="transcript" class="btn btn-primary">Upload Transcript</label>
+          <input  class="" type="file" id="transcript" name="transcript" accept=".txt, .pdf" placeholder=""/>
         </form>
+        <br>
+        {% set transcript = 'user_files/' ~ session['transcript'] %}
+        <a role="button" class="btn btn-secondary" href={{ url_for('static', filename=transcript ) }} download={{ session['transcript'] }}>Download Transcript</a>
+        <br>
+        <br>
+        <h5>Resume</h5>
+        <form action="./upload_resume" method="POST" id="resume_form" enctype="multipart/form-data">
+          <label role="button" for="resume" class="btn btn-primary">Upload Resume</label>
+          <input type="file" id="resume" name="resume" accept=".txt, .pdf"/>   
+        </form>
+        <br>
+        {% set resume = 'user_files/' ~ session['resume'] %}
+        <a role="button" class="btn btn-secondary" href={{ url_for('static', filename=resume ) }} download={{ session['resume'] }}>Download Resume</a>       
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  let d_transcript_btn = document.getElementById('t_resume');
+  let d_resume_btn = document.getElementById('d_resume');
+  let u_transcript = document.getElementById('transcript');
+  let u_resume = document.getElementById('resume');
+  let t_form = document.getElementById('transcript_form');
+  let r_form = document.getElementById('resume_form');
+
+  u_transcript.addEventListener('change', () => {
+    t_form.submit();
+  });
+
+  u_resume.addEventListener('change', () => {
+    r_form.submit();
+  });
+
+</script>
 {% endblock %}

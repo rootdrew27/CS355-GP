@@ -1,9 +1,14 @@
 from flask import Flask
+import os
 # from flask_session import Session
+
+cd = os.getcwd()
+UPLOAD_FOLDER = cd + '\\JobFinder\\static\\user_files\\'
 
 def create_app() -> Flask: 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = b'DKFJSOFJ1342'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     from .views import views
     from .auth import auth

@@ -26,7 +26,7 @@ General Tasks:
 Features CheckList: (Tasks that are complete are marked Done)
 
 Login - Done
-Register
+Register - Needs Testing
 DFA - Done
 
 Create Job 
@@ -42,3 +42,10 @@ Upload Transcript
 Edit Info
 
 Create Department
+
+Registration: 
+    Fname
+    lname
+    email (uwec.edu)
+    valid resume and transcript file type
+    Currently filenames may not be unique (plan: have a var keep track of the number of resumes/transcripts (or simply get it from the database) to ensure that filenames are unique)

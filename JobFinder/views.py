@@ -46,7 +46,7 @@ def get_job_info(job_id):
 
 @views.route('/jobs/apply/<int:job_id>')
 def apply(job_id):
-    # apply for the job (notify the poster and store info in db)
+    # apply for the job (notify  the poster and store info in db)
 
     # or redirect the client to the login page.
  pass   
