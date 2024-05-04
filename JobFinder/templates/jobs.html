@@ -10,18 +10,45 @@
     <h3>Jobs</h3>
     <hr>
     <div class="card-deck overflow-y-auto h-50">
+      <div class="row w-100 gx-5">
+      
       {% for job in jobs %} 
+      {# <div class="col-lg-12 mb-5">
+        <div class="card h-100 mx-auto w-75 shadow border-0">
+            <img class="card-img-top" style="max-height:250px;" src={{ job['img_path']}} alt="...">
+            <div class="card-body p-4">
+                <p id="jobId" hidden>{{ id }}</p>
+                <div class="badge bg-primary bg-gradient rounded-pill mb-2">type</div>
+                <a class="text-decoration-none link-dark stretched-link" href="#!"><h5 class="card-title mb-3">{{ job['job_title'] }}</h5></a>
+                <p class="card-text mb-0">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+            <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                <div class="d-flex align-items-end justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <img class="rounded-circle me-3" src="https://dummyimage.com/40x40/ced4da/6c757d" alt="...">
+                        <div class="small">
+                            <div class="fw-bold">{{ job['first_n'] }}</div>
+                            <div class="text-muted">Posted: {{ job['date_listed'].format() }}</div>
+                        </div>
+                        <button class="btn btn-primary apply mt-1 ms-4" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div> #}
 
+
+ 
         {% set id = job['job_id']|string %}
         {% set descripID = "descrip" ~ id %}
-        <div class="card m-1 w-75 mx-auto" style="min-height: 125px;max-width: 100%;">
+        <div class="card m-1 w-100 mx-auto shadow border-0" style="min-height: 125px;max-width: 100%;">
           <div class="row g-0 h-100">
             <div class="col-md-3">
               <img src="{{ job['img_path'] }}" class="img-fluid rounded-start" alt="" style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
             </div>
             <div class="col-md-7">
               <div class="card-body">            
-                <h5 class="card-title fw-bold">Job Title: {{ job['job_title'] }}</h5>
+                <h5 class="card-title fw-bold">Job Title:   </h5>
                 <p id="jobId" hidden>{{ id }}</p>
                 <p class="card-text">Posted by: {{ job['first_n'] }}</p>
                 {% if job['dept_title'] != None %}
@@ -45,6 +72,7 @@
         </div>
       </div>    
     {% endfor %}
+    </div>
   </div>
 </div>
   

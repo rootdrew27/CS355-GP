@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 
 # connect to the database 
-connection = sqlite3.connect('./JobFinder/db/database.db')
+connection = sqlite3.connect('../JobFinder/db/database.db')
 
 # execute table creation 
 with open('./db/schema.sql') as f:

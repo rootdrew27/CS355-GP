@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, session, redirect, flash
-from flask_session import Session
+#from flask_session import Session
 from flask import Blueprint
 from JobFinder.helpers import get_db_conn, is_logged_in, send_dfa_token
 
@@ -38,9 +38,7 @@ def login():
         else: # invalid credentials
             flash('Email or Password were invalid!', category='error')
             return render_template('login.html')
-
-
-        
+  
     # else, its a GET request
     return render_template('login.html')
 

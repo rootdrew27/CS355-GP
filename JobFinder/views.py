@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, session, redirect
+from flask import Flask, render_template, request, url_for, session, redirect, flash
 from flask import Blueprint
 from .helpers import get_db_conn, is_logged_in
 
@@ -8,10 +8,10 @@ views = Blueprint('views', __name__)
 perm_lvls = {0: 'default', 1: 'student', 2: 'faculty'}
 ######################## VIEWS #####################################
 @views.route('/')
-def index():
+def home():
     x = is_logged_in()
     # logger.debug('Session is started: ' + str(x))
-    return render_template('index.html', is_logged_in=is_logged_in(), session=session)
+    return render_template('home.html', is_logged_in=is_logged_in(), session=session)
 
 # job list view
 @views.get('/jobs')
@@ -42,6 +42,8 @@ def get_job_info(job_id):
                 'descrip': job['descrip']                
             } 
 
+
+
 @views.route('/jobs/apply/<int:job_id>')
 def apply(job_id):
     # apply for the job (notify the poster and store info in db)
@@ -52,7 +54,11 @@ def apply(job_id):
 
 @views.route('/student_profile')
 def student_profile():
-    return render_template('profile.html', session = session)
+    if 'email' in session:
+        return render_template('profile.html', session=session)
+    else:
+       flash("Login/Register to create your profile!", category='info')
+       return redirect(url_for('auth.login'))
 
 @views.route('/department')
 def department():
