@@ -6,67 +6,50 @@
       <button type="submit" class="btn btn-primary" style="margin-right: 15px;"> Search</button>
   </form> #}
   <!-- This loops through the jobs and creates the following html for each job-->
-  <div class="container">
+  <div class="container mb-5">
     <h3>Jobs</h3>
     <hr>
-    <div class="card-deck overflow-y-auto h-50" style="display:block">
-      <div class="row w-100 gx-5">
+    <div class="container">
+      <div id="fitlers" class="">
+  
+      </div>
+      <div class="py-2 ms-auto" style="width:250px;">
+        <form class="form-inline">
+          <input class="form-control mr-sm-2" id="searchbar" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
+        </form>
+      </div>
+    </div>
+
+
+    <div class="card-deck overflow-y-auto m-auto" style="display:block;min-height:300px;max-height:600px;">
+      <div class="row w-100 gx-5 gy-1">
       
       {% for job in jobs %} 
-      {# <div class="col-lg-12 mb-5">
-        <div class="card h-100 mx-auto w-75 shadow border-0">
-            <img class="card-img-top" style="max-height:250px;" src={{ job['img_path']}} alt="...">
-            <div class="card-body p-4">
-                <p id="jobId" hidden>{{ id }}</p>
-                <div class="badge bg-primary bg-gradient rounded-pill mb-2">type</div>
-                <a class="text-decoration-none link-dark stretched-link" href="#!"><h5 class="card-title mb-3">{{ job['job_title'] }}</h5></a>
-                <p class="card-text mb-0">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-            <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
-                <div class="d-flex align-items-end justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle me-3" src="https://dummyimage.com/40x40/ced4da/6c757d" alt="...">
-                        <div class="small">
-                            <div class="fw-bold">{{ job['first_n'] }}</div>
-                            <div class="text-muted">Posted: {{ job['date_listed'].format() }}</div>
-                        </div>
-                        <button class="btn btn-primary apply mt-1 ms-4" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>  
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div> #}
-
-
- 
         {% set id = job['job_id']|string %}
         {% set descripID = "descrip" ~ id %}
-        <div class="card m-1 w-100 mx-auto shadow border-0" style="min-height: 125px;max-width: 100%;">
+        <div class="card m-2 border-0 shadow" style="min-height: 125px;max-width: 100%;">
           <div class="row g-0 h-100">
             <div class="col-md-3">
               <img src="{{ job['img_path'] }}" class="img-fluid rounded-start" alt="" style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
             </div>
             <div class="col-md-7">
               <div class="card-body">            
-                <h5 class="card-title fw-bold">Job Title:   </h5>
-                <p id="jobId" hidden>{{ id }}</p>
-                <p class="card-text">Posted by: {{ job['first_n'] }}</p>
+                <h5 class="card-title fw-bold jobTitle">{{ job['job_title'] }}</h5>
+                <p class="jobId" hidden>{{ id }}</p>
+                <p class="card-text">Posted by: {{ job['first_n'] }} {{ job['last_n']}}</p>
                 {% if job['dept_title'] != None %}
-                  <p class="card-text">Department: <a href="department_profile{{ job['dept_title'] }}">{{ job['dept_title'] }}</a></p>              
-                {% endif %}
-              
+                  <p class="card-text">Department: <a href={{ url_for('views.department_profile', dept_id=job['dept_id']) }}>{{ job['dept_title'] }}</a></p>              
+                {% endif %}            
                 <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
-
-
               </div>          
             </div>
             <div class="col-md-2 flex-column d-flex">
-            <button class="btn btn-primary apply mt-5 m-2" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>   <!-- Button trigger modal -->
-            <button class="btn btn-secondary m-2" data-bs-toggle="collapse" data-bs-target="#{{ descripID }}" aria-expanded="false">See More</button>
-          </div>
-          <div class="row">
-            <div class="collapse multi-collapse" id="{{ descripID }}">
-              <p class="card-text">{{ job['job_descrip'] }}</p>
+              <button class="btn btn-primary apply mt-5 m-2" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>   <!-- Button trigger modal -->
+              <button class="btn btn-secondary m-2" data-bs-toggle="collapse" data-bs-target="#{{ descripID }}" aria-expanded="false">See More</button>
+            </div>
+            <div class="row">
+              <div class="collapse multi-collapse" id="{{ descripID }}">
+                <p class="card-text">{{ job['job_descrip'] }}</p>
             </div>
           </div>            
         </div>
@@ -85,9 +68,27 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">          
+          <p id="deptTitle" class="card-text"></p>
+          <p>Posted By: <span id="posterName"></span></p>          
           <p id="description" class="card-text"></p>
-          <p class="card-text"><small id="date_listed" class="text-body-secondary"></small></p>          
-          <button id="apply" class="btn btn-primary">Apply</button>
+          <p class="card-text"><small id="dateListed" class="text-body-secondary"></small></p>      
+          <hr>               
+          <form action="./apply">
+            <input type="number" id="jobId" name="jobId" hidden></input>
+            <label for="coverL">Cover Letter: </label>
+            <input type="textarea" id="coverL" name="coverL" rows="5" cols="20">
+            <br>
+            {% set hasResume = 'checked' if session['path_to_r_file'] != None else "" %}
+            <label for="resume">Attach Resume</label>
+            <input type="checkbox" id="resume" name="resume" {{ hasResume }}>
+            <br>
+            {% set hasTranscript = 'checked' if session['path_to_t_file'] != None else "" %}
+            <label for="transcript">Attach Transcript</label>
+            <input type="checkbox" id="transcript" name="transcript" {{ hasTranscript }}>
+            <br>
+            <br>
+            <button role="button" type="submit" class="btn btn-primary">Apply</button>
+          </form>          
         </div>
 
       </div>
@@ -99,7 +100,52 @@
 
 {% block script %}
 <script>
-  
+
+  $(document).ready(function() {
+    $('#searchbar').on('keyup', function() {
+      var value = $(this).val().toLowerCase();
+      $('.card-deck .card').filter(function() {
+        $(this).toggle($(this).find('.jobTitle').text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+
+    //Modal vars
+    let jobId;
+    let jobIdEle = document.getElementById('jobId');
+    let titleEle = document.getElementById('jobTitle'); 
+    let descripEle = document.getElementById('description');
+    let dateListedEle = document.getElementById('dateListed');
+    let posterNameEle = document.getElementById('posterName');
+    let deptTitleEle = document.getElementById('deptTitle');
+
+    //Job Modal Event
+    document.querySelectorAll('.apply').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+
+        if ("{{ session['email'] }}" == ""){
+          location.href = './login';          
+        }
+
+        jobId = event.target.parentElement.parentElement.querySelector('.jobId').innerText;
+
+        const req = new XMLHttpRequest();
+
+        //Populate modal
+        req.addEventListener("load", () => {
+          let res = req.response;
+            titleEle.innerText = res['title'];
+            descripEle.innerText = res['descrip'];
+            dateListedEle.innerText = res['date_listed'];
+            posterNameEle.innerText = res['first_n'] + ' ' + res['last_n'];
+            deptTitleEle.innerText = res['dept_title'];
+            jobIdEle.value = res['job_id'];
+        });
+        req.open('GET', 'jobs/' + jobId);
+        req.responseType = 'json';
+        req.send();
+      });
+    });
+  });
   // document.querySelectorAll('.expand').forEach((btn) => {
   //   btn.addEventListener('click', (event) => {
   //     let card = event.target.parentElement.parentElement.parentElement;
@@ -109,56 +155,6 @@
   //   });
   // });
 
-  //Modal vars
 
-  let jobId;
-  let titleEle; 
-  let descripEle;
-  let dateListedEle;
-
-  //Job Modal Event
-  document.querySelectorAll('.btn.learnMore').forEach((btn) => {
-    
-    //Activate Job Modal
-    btn.addEventListener('click', (event) => {
-
-      jobId = event.target.parentElement.querySelector('#jobId').innerText
-
-      titleEle = document.getElementById('jobTitle');
-      descripEle = document.getElementById('description');
-      dateListedEle = document.getElementById('date_listed');
-
-      const req = new XMLHttpRequest();
-
-      //populate the modal with the selected job info
-      req.addEventListener("load", () => {
-        let res = req.response;
-        titleEle.innerText = res['title'];
-        descripEle.innerText = res['descrip'];
-        dateListedEle.innerText = res['date_listed'];
-
-      });
-      req.open("GET", "jobs/" + jobId);
-      req.responseType = "json";
-      req.send();
-
-      //title = document.getElementById('staticBackdropLabel');
-      //title.innerText = null
-    });
-  });
-  //Apply
-  document.querySelector('.apply').forEach((btn) => {
-    btn.addEventListener('click', (event) => {
-      const req = new XMLHttpRequest();
-
-      req.addEventListener("load", () => {
-        let res = req.response;
-
-      });
-      req.open('GET', 'jobs/' + jobId + '/apply');
-      req.responseType = 'json';
-      req.send();
-    });
-  });
 </script>
 {% endblock %}

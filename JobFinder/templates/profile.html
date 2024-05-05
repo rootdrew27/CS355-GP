@@ -38,30 +38,31 @@ label {
       </div>
       <hr>
       <div class="row">
-        <div class="col-sm-4">
-          <p class="mb-0">Total activity</p>
-          {# <h5>{{ user.total_activity }}</h5> #}
+      <form action="./update_prof" method="POST">
+        <div class="col-sm-4">          
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" value={{ session['email'] }}>
         </div>
+        <br>
         <div class="col-sm-4">
-          <p class="mb-0">Last activity</p>
-          {# <h5>{{ user.last_activity_date }}</h5> #}
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password">
         </div>
-        <div class="col-sm-4">
-          <p class="mb-0">Member since</p>
-          {# <h5>{{ user.member_since_date }}</h5> #}
-        </div>
+        <br>
+        <button role="submit" class="btn btn-primary">Update</button>
+      </form>
       </div>
       <hr>
       <div class="row">
         <div class="col-sm-4">
-          <p class="mb-0">Votes</p>
+          <p class="mb-0">Saved Jobs:</p>
           {# <h5>{{ user.votes }}</h5> #}
         </div>
         <div class="col-sm-4">
           <p class="mb-0">Subscriptions</p>
           {# <h5>{{ user.subscriptions }}</h5> #}
         </div>
-      </div>
+      </div>      
       <hr>
       <div class="container">
         <h5>Transcript</h5>
@@ -90,8 +91,6 @@ label {
 
 {% block script %}
 <script>
-  let d_transcript_btn = document.getElementById('t_resume');
-  let d_resume_btn = document.getElementById('d_resume');
   let u_transcript = document.getElementById('transcript');
   let u_resume = document.getElementById('resume');
   let t_form = document.getElementById('transcript_form');
@@ -104,6 +103,5 @@ label {
   u_resume.addEventListener('change', () => {
     r_form.submit();
   });
-
 </script>
 {% endblock %}

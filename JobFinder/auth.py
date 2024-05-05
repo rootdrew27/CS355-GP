@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, session, redirect, f
 #from flask_session import Session
 from flask import Blueprint
 from werkzeug.utils import secure_filename, send_from_directory
-from JobFinder.helpers import get_db_conn, is_logged_in, send_dfa_token, allowed_file
+from JobFinder.helpers import get_db_conn, is_logged_in, send_dfa_token, allowed_file, validate_email
 import os
 
 
@@ -31,8 +31,7 @@ def register():
 
         # check for valid input
         if fname and lname and password:
-            email_split = email.split('@')[-1].split('.')
-            if email_split[-2] == 'uwec' and email_split[-1] == 'edu':                 
+            if validate_email(email):             
 
                 path_to_r_file = None
                 path_to_t_file = None
@@ -118,7 +117,7 @@ def login():
         # start session
 
         else: # invalid credentials
-            flash('Email or Password were invalid!', category='error')
+            flash('Email and/or Password is invalid!', category='error')
             return render_template('login.html')
 
     # else, its a GET request
@@ -252,4 +251,29 @@ def upload_resume():
             return redirect(url_for('views.student_profile'))
     except Exception as ex:
         flash('Error occurred while uploading resume', category='error')
+        return redirect(url_for('views.student_profile'))
+
+
+@auth.route('update_prof', methods=["POST"])
+def update_prof():
+    
+    email = request.form['email']
+    password = request.form['password']
+
+    old_email = session['email']
+
+    if validate_email(email):
+        conn = get_db_conn()
+        conn.execute(
+            f"""UPDATE user SET email = '{email}', password = '{password}' WHERE email = '{old_email}';"""
+        )
+        conn.commit()
+        conn.close()
+
+        session['email'] = email        
+
+        flash('Profile Updated Successfully')
+        return redirect(url_for('views.student_profile'))
+    else:
+        flash('Invalid Email!', category='email')
         return redirect(url_for('views.student_profile'))

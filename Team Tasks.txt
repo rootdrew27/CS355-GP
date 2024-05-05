@@ -8,7 +8,7 @@ Andrew
 Ryan
  - profile html page
 
-
+========================================================================
 General Tasks:
   Job Listing Page
     - Populate the apply modal using AJAX
@@ -22,7 +22,7 @@ General Tasks:
   Department Page
     - 
 
-
+========================================================================
 Features CheckList: (Tasks that are complete are marked Done)
 
 Login - Done
@@ -32,18 +32,21 @@ DFA - Done
 Create Job 
 Edit/Delete Job
 
-Apply for Job
+Apply for Job 
 
 Filter Jobs
-Search Jobs
+Search Jobs - Done
 
-Upload Resume
-Upload Transcript
-Edit Info
+Upload/Download Resume - Done
+Upload/Download Transcript - Done
+Edit Info - Done
+Saved Jobs
 
-Create Department
 
-Registration: 
+
+========================================================================
+Future Plans:
+Registration 
     Fname
     lname
     email (uwec.edu)
