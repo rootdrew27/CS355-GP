@@ -134,14 +134,15 @@ def dfa():
             conn = get_db_conn()
             result = conn.execute(f"""
             SELECT * from user WHERE email = '{session['temp_email']}';"""
-            ).fetchall()
+            ).fetchall()[0]
 
-            session['first_n'] = result[0]['first_n']
-            session['last_n'] = result[0]['last_n']
-            session['email'] = result[0]['email']
-            session['transcript'] = str(result[0]['path_to_t_file']).split('\\')[-1]
-            session['resume'] = str(result[0]['path_to_r_file']).split('\\')[-1]
-            session['perm_lvl'] = result[0]['permission_level']
+            session['user_id'] = result['id']
+            session['first_n'] = result['first_n']
+            session['last_n'] = result['last_n']
+            session['email'] = result['email']
+            session['transcript'] = str(result['path_to_t_file']).split('\\')[-1]
+            session['resume'] = str(result['path_to_r_file']).split('\\')[-1]
+            session['perm_lvl'] = result['permission_level']
 
             return redirect(url_for('views.student_profile'))
         else:

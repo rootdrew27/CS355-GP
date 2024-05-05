@@ -22,9 +22,18 @@ def job_finder():
             LEFT JOIN user ON job.user_id = user.id
             LEFT JOIN department ON job.dept_id = department.id;"""
     ).fetchall()
+
+    if 'email' in session:
+        jobsAppliedTo = conn.execute(f"""
+            SELECT job_id FROM job_application WHERE user_id = {session['user_id']};
+        """).fetchall()
+        jobsAppliedTo = [job[0] for job in jobsAppliedTo]
+    else: 
+        jobsAppliedTo = None
+
     conn.close()
 
-    return render_template('jobs.html', jobs=jobs, is_logged_in=is_logged_in(), session=session)
+    return render_template('jobs.html', jobs=jobs, jobsAppliedTo=jobsAppliedTo, session=session)
 
 @views.get('/jobs/<int:job_id>')
 def get_job_info(job_id):
@@ -52,8 +61,17 @@ def get_job_info(job_id):
 
 @views.route('/apply', methods=['POST'])
 def apply():
+    try:
+        coverLetter = request.form['coverL']
+        jobId = request.form['jobId']
 
-    apply_for_job()                                         
+        apply_for_job(jobId)
+
+        flash("Successfully Applied!")
+        return redirect(url_for('views.job_finder'))                                      
+    except:
+        flash("Failed to Apply", category='error')
+        return redirect(url_for('views.job_finder'))
 
     
 

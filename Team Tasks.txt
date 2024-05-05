@@ -32,7 +32,8 @@ DFA - Done
 Create Job 
 Edit/Delete Job
 
-Apply for Job 
+Apply for Job - Done
+Job Status
 
 Filter Jobs
 Search Jobs - Done

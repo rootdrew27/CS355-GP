@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import smtplib, ssl
 from flask import session
@@ -19,14 +20,14 @@ def get_db_conn():
 def is_logged_in() -> bool:
     return True if 'email' in session else False
 
-# SECRETS = None
-# import json
-# with open('secrets.json') as json_file:
-#    SECRETS = json.load(json_file)
+SECRETS = None
+import json
+with open('secrets.json') as json_file:
+   SECRETS = json.load(json_file)
 
-# port = 465
-# sender = SECRETS['sender_email']
-# password = SECRETS['password']
+port = 465
+admin = SECRETS['sender_email']
+password = SECRETS['password']
 
 def send_dfa_token(receiver):
     try:
@@ -41,38 +42,70 @@ def send_dfa_token(receiver):
         context = ssl.create_default_context()
 
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-            server.login(sender, password)
-            output = server.sendmail(sender, receiver, message)
+            server.login(admin, password)
+            output = server.sendmail(admin, receiver, message)
             current_app.logger.info(f"\nAttempted to send email to {receiver}.\n Info: {output}")
 
     except Exception as e: 
         current_app.logger.error("Error: ", e)
 
 
-def apply_for_job(user, job_id=None):
+def apply_for_job(job_id=None):
 
     conn = get_db_conn()
-    r = conn.execute(
-        f"""SELECT user.email
+    job_info = conn.execute(
+        f"""SELECT user.id, user.email, job.title
             FROM user
             JOIN job ON user.id = job.user_id
         WHERE job.id = {job_id}"""
     ).fetchall()[0]
-    conn.close()
-
-    
 
     try:
         msg = EmailMessage()
         msg["Subject"] = "Job Application"
-        msg["From"] = sender
-        msg["To"] = 
+        msg["From"] = admin
+        msg["To"] = admin
+        msg.set_content(
+            f"""
+            Hi,
+            
+            I am interested in the {job_info['title']} position that you've posted. 
 
-        with smtplib.SMTP("localhost") as server:
-            server.send_message(msg)
-        
+            Thank you for considering me,
+
+            {session['first_n']} {session['last_n']}            
+            """
+        )
+
+        if session['transcript'] != None:
+            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['transcript']), 'rb') as t:
+                file_data = t.read()
+                msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['transcript'])
+
+        if session['resume'] != None:
+            with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['resume']), 'rb') as r:
+                file_data = r.read()
+                msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['resume'])
+
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(admin, password)
+            send_errors = server.send_message(msg, admin, admin)
+            current_app.logger.info(f"\nAttempted to send email to {admin}.\n Info: {send_errors}")              
+
+        # set the application in the database
+        result = conn.execute(
+            f"""INSERT INTO job_application
+            (user_id, job_id)
+            VALUES ({session['user_id']}, {job_id});"""
+        )
+        conn.commit()
+        conn.close()
+
     except Exception as ex:
         current_app.logger.error("Error: ", ex)
+        raise ex
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf'}
 def allowed_file(filename):
@@ -85,4 +118,4 @@ def validate_email(email:str) -> bool:
     if email_split[-2] == 'uwec' and email_split[-1] == 'edu':
         return True
     else:
-        return False    
+        return False
