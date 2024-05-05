@@ -27,17 +27,20 @@
                 <li class="nav-item">
                     <a href={{ url_for('views.student_profile') }} class="nav-link">Profile</a>
                 </li>
-                <div class="float-end">
-                  {% if session['email'] %}
-                    <li class="nav-item">
-                      <a href={{ url_for('auth.logout') }} type="button" class="btn btn-primary" role="button">Logout</a>
-                    </li>
-                  {% else %}
-                    <li class="nav-item">
-                      <a href={{ url_for('auth.login') }} type="button" class="btn btn-primary" role="button">Login</a>
-                    </li>
-                  {% endif %}
-                </div>
+                {% if session['perm_lvl'] == 2 %}
+                  <li>
+                    <a href={{ url_for('manage_jobs') }}></a>
+                  </li>
+                {% endif %}
+                {% if session['email'] %}
+                  <li class="nav-item">
+                    <a href={{ url_for('auth.logout') }} type="button" class="btn btn-primary" role="button">Logout</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a href={{ url_for('auth.login') }} type="button" class="btn btn-primary" role="button">Login</a>
+                  </li>
+                {% endif %}                  
             </ul>
         </div>
     </nav>

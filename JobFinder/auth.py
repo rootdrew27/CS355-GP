@@ -143,6 +143,7 @@ def dfa():
             session['transcript'] = str(result['path_to_t_file']).split('\\')[-1]
             session['resume'] = str(result['path_to_r_file']).split('\\')[-1]
             session['perm_lvl'] = result['permission_level']
+                
 
             return redirect(url_for('views.student_profile'))
         else:

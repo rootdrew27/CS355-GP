@@ -16,7 +16,12 @@ CREATE TABLE department (
     title TEXT NOT NULL UNIQUE,
     descrip TEXT NOT NULL,
     website_url TEXT NOT NULL,
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    admin_id INTEGER,
+    CONSTRAINT fk_admin_id FOREIGN KEY (admin_id)
+    REFERENCES user (id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE);
 );
 
 CREATE TABLE job (

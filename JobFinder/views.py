@@ -5,11 +5,12 @@ from .helpers import get_db_conn, is_logged_in, apply_for_job
 views = Blueprint('views', __name__)
 
 
-perm_lvls = {0: 'default', 1: 'student', 2: 'faculty'}
+perm_lvls = {0: 'default', 1: 'student', 2: 'faculty'} # not in use
+
 ######################## VIEWS #####################################
 @views.route('/')
 def home():
-    return render_template('home.html', is_logged_in=is_logged_in(), session=session)
+    return render_template('home.html', session=session)
 
 # job list view
 @views.get('/jobs')
