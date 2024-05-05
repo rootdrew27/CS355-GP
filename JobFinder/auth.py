@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, session, redirect, f
 #from flask_session import Session
 from flask import Blueprint
 from werkzeug.utils import secure_filename, send_from_directory
-from JobFinder.helpers import get_db_conn, is_logged_in, send_dfa_token, allowed_file, validate_email
+from JobFinder.helpers import get_db_conn, is_logged_in, send_dfa_token, allowed_file, validate_email, is_valid_password
 import os
 
 
@@ -180,7 +180,7 @@ def upload_transcript():
                     f"""SELECT path_to_t_file FROM user WHERE email = '{email}';"""
                 ).fetchall()
                 old_filename = r[0]['path_to_t_file']
-                if old_filename:
+                if old_filename != 'None':
                     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], old_filename))
 
                 transcript.save(os.path.join(current_app.config['UPLOAD_FOLDER'], t_filename))
@@ -205,6 +205,7 @@ def upload_transcript():
             flash('Invalid Transcript!', category='error')
             return redirect(url_for('views.student_profile'))
     except Exception as ex:
+        current_app.logger.error("Error occurred while uploading a transcript.", ex)
         flash('Error occurred while uploading transcript', category='error')
         return redirect(url_for('views.student_profile'))
 
@@ -256,26 +257,59 @@ def upload_resume():
         return redirect(url_for('views.student_profile'))
 
 
-@auth.route('update_prof', methods=["POST"])
-def update_prof():
+@auth.route('update_email', methods=["POST"])
+def update_email():
     
     email = request.form['email']
-    password = request.form['password']
-
     old_email = session['email']
 
+    if email == old_email:
+        flash('This is the same email!', category='error')
+        return redirect(url_for('views.student_profile'))
+
+    conn = get_db_conn()
+
     if validate_email(email):
-        conn = get_db_conn()
-        conn.execute(
-            f"""UPDATE user SET email = '{email}', password = '{password}' WHERE email = '{old_email}';"""
-        )
+
+        conn.execute(f"""
+            UPDATE user SET email = '{email}'
+            WHERE email = '{old_email}';
+        """)
         conn.commit()
         conn.close()
 
         session['email'] = email        
 
-        flash('Profile Updated Successfully')
+        flash('Email updated successfully!')
         return redirect(url_for('views.student_profile'))
     else:
-        flash('Invalid Email!', category='email')
+        flash('Invalid Email!', category='error')
         return redirect(url_for('views.student_profile'))
+    
+@auth.route('update_password', methods=["POST"])
+def update_password():
+    
+    password = request.form['password']
+    rePass = request.form['rePassword']
+
+    conn = get_db_conn()
+
+    oldpassword = conn.execute(f"""SELECT password FROM user WHERE id = {session['user_id']}""").fetchall()[0]
+
+    if oldpassword == password:
+        flash('This was already your password!', category='info')
+        return redirect(url_for('views.student_profile'))
+
+    if (is_valid_password(password, rePass)) == False:
+        return redirect(url_for('views.student_profile'))
+    
+    conn.execute(f"""
+        UPDATE user
+        SET password = '{password}' 
+        WHERE id = {session['user_id']};
+    """)
+    conn.commit()
+    conn.close()
+
+    flash('Successfully updated password!')
+    return redirect(url_for('views.student_profile'))

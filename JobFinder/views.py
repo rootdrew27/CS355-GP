@@ -30,7 +30,7 @@ def job_finder():
         """).fetchall()
         jobsAppliedTo = [job[0] for job in jobsAppliedTo]
     else: 
-        jobsAppliedTo = None
+        jobsAppliedTo = ['']
 
     conn.close()
 
@@ -38,6 +38,7 @@ def job_finder():
 
 @views.get('/jobs/<int:job_id>')
 def get_job_info(job_id):
+    
     conn = get_db_conn()
     job = conn.execute(
         f"""SELECT job.id AS "job_id", job.title AS "job_title", job.date_listed, job.descrip AS "job_descrip", job.img_path, department.title AS "dept_title", user.first_n AS "first_n", user.last_n AS "last_n" 
@@ -64,6 +65,7 @@ def get_job_info(job_id):
 def apply():
     try:
         coverLetter = request.form['coverL']
+
         jobId = request.form['jobId']
 
         apply_for_job(jobId)
@@ -73,8 +75,7 @@ def apply():
     except:
         flash("Failed to Apply", category='error')
         return redirect(url_for('views.job_finder'))
-
-    
+   
 
 @views.route('/student_profile')
 def student_profile():

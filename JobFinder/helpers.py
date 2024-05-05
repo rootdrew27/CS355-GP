@@ -1,7 +1,8 @@
 import os
+import re
 import sqlite3
 import smtplib, ssl
-from flask import session
+from flask import session, flash
 from flask import current_app
 from email.message import EmailMessage
 
@@ -33,24 +34,28 @@ def send_dfa_token(receiver):
     try:
         token = session['token']
 
-        message = f"""
-        Subject: DFA TOKEN
-
+        msg = EmailMessage()
+        msg['Subject'] = 'DFA Token'
+        msg['From'] = admin
+        msg['To'] = receiver
+        msg.set_content(f"""
+        UWEC JOB FINDER
+                        
         Token: {token}
-        """
+        """)
 
         context = ssl.create_default_context()
 
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
             server.login(admin, password)
-            output = server.sendmail(admin, receiver, message)
+            output = server.send_message(msg)
             current_app.logger.info(f"\nAttempted to send email to {receiver}.\n Info: {output}")
 
     except Exception as e: 
         current_app.logger.error("Error: ", e)
 
 
-def apply_for_job(job_id=None):
+def apply_for_job(job_id:int, with_transcript:bool, with_resume:bool):
 
     conn = get_db_conn()
     job_info = conn.execute(
@@ -64,7 +69,7 @@ def apply_for_job(job_id=None):
         msg = EmailMessage()
         msg["Subject"] = "Job Application"
         msg["From"] = admin
-        msg["To"] = admin
+        msg["To"] = job_info['email'] # the email of the poster
         msg.set_content(
             f"""
             Hi,
@@ -77,12 +82,12 @@ def apply_for_job(job_id=None):
             """
         )
 
-        if session['transcript'] != None:
+        if session['transcript'] != None and with_transcript:
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['transcript']), 'rb') as t:
                 file_data = t.read()
                 msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['transcript'])
 
-        if session['resume'] != None:
+        if session['resume'] != None and with_resume:
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['resume']), 'rb') as r:
                 file_data = r.read()
                 msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['resume'])
@@ -91,11 +96,11 @@ def apply_for_job(job_id=None):
 
         with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
             server.login(admin, password)
-            send_errors = server.send_message(msg, admin, admin)
-            current_app.logger.info(f"\nAttempted to send email to {admin}.\n Info: {send_errors}")              
+            send_errors = server.send_message(msg)
+            current_app.logger.info(f"\nAttempted to send email to {job_info['email']}.\n Info: {send_errors}")              
 
         # set the application in the database
-        result = conn.execute(
+        conn.execute(
             f"""INSERT INTO job_application
             (user_id, job_id)
             VALUES ({session['user_id']}, {job_id});"""
@@ -118,4 +123,19 @@ def validate_email(email:str) -> bool:
     if email_split[-2] == 'uwec' and email_split[-1] == 'edu':
         return True
     else:
+        return False
+    
+def is_valid_password(password:str, repass=None) -> bool:
+
+    if len(password) > 5 and re.search('[^a-zA-Z]', password) != None:
+        if repass != None:
+            if password == repass:
+                return True
+            else:
+                flash('Passwords did NOT match!', category='error')
+                return False
+        else: 
+            return True
+    else:
+        flash('Invalid Password!', category='error') 
         return False
