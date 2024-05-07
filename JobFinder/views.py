@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, url_for, session, redirect, flash
+from flask import Flask, render_template, request, url_for, session, redirect, flash, current_app, Response
+import os
 from flask import Blueprint
 from .helpers import get_db_conn, is_logged_in, apply_for_job
 
@@ -38,7 +39,7 @@ def job_finder():
 
 @views.get('/jobs/<int:job_id>')
 def get_job_info(job_id):
-    
+
     conn = get_db_conn()
     job = conn.execute(
         f"""SELECT job.id AS "job_id", job.title AS "job_title", job.date_listed, job.descrip AS "job_descrip", job.img_path, department.title AS "dept_title", user.first_n AS "first_n", user.last_n AS "last_n" 
@@ -65,14 +66,24 @@ def get_job_info(job_id):
 def apply():
     try:
         coverLetter = request.form['coverL']
+        if 'transcript' in request.form:
+            withTranscript = request.form['transcript']
+        else:
+            withTranscript = None
+
+        if 'resume' in request.form:
+            withResume = request.form['resume']
+        else:
+            withResume = None
 
         jobId = request.form['jobId']
 
-        apply_for_job(jobId)
+        apply_for_job(jobId, withTranscript, withResume)
 
         flash("Successfully Applied!")
         return redirect(url_for('views.job_finder'))                                      
-    except:
+    except Exception as ex:
+        current_app.logger.error(ex)
         flash("Failed to Apply", category='error')
         return redirect(url_for('views.job_finder'))
    
@@ -94,15 +105,72 @@ def department_profile(dept_id):
     # get desired department
     conn = get_db_conn()
     jobs = conn.execute(
-        f"""SELECT job.id AS id, job.title AS title, job.date_listed, job.descrip, job.img_path, user.first_n, user.last_n 
+        f"""SELECT job.id AS id, job.title AS title, job.date_listed, job.descrip, job.img_path, user.first_n, user.last_n  
             FROM job 
             LEFT JOIN user ON job.user_id = user.id
-            JOIN department ON job.dept_id = {dept_id};"""
+            LEFT JOIN department ON job.dept_id = department.id
+            WHERE department.id = {dept_id};"""
     ).fetchall()  
 
+    if 'email' in session:
+        jobsAppliedTo = conn.execute(f"""
+            SELECT job_id FROM job_application WHERE user_id = {session['user_id']};
+        """).fetchall()
+        jobsAppliedTo = [job[0] for job in jobsAppliedTo]
+    else: 
+        jobsAppliedTo = ['']
+
     dept_info = conn.execute(
-        f"""SELECT id, title, email, descrip FROM department WHERE department.id = {dept_id};"""
+        f"""SELECT id, title, email, descrip, website_url FROM department WHERE department.id = {dept_id};"""
     ).fetchall()[0]
 
     conn.close()
-    return render_template('department.html', jobs=jobs, dept_info=dept_info)
+    return render_template('department.html', jobs=jobs, jobsAppliedTo=jobsAppliedTo, dept_info=dept_info)
+
+
+@views.route('/manage_jobs')
+def manage_jobs():
+
+    conn = get_db_conn()
+    jobs = conn.execute(f"""
+        SELECT * from job WHERE user_id = {session['user_id']};
+    """).fetchall()
+
+    return render_template('manage_jobs.html', session=session, jobs=jobs)
+
+@views.route('/create_job', methods=['POST'])
+def create_job():
+    title = request.form.get('title', None)
+    descrip = request.form.get('descrip', None)
+    image = request.files.get('image', None)
+
+    if title != None and descrip != None and image != None:
+
+        img_path = os.path.join(current_app.config['IMAGE_FOLDER'], image.filename)
+        image.save(img_path)
+
+        conn = get_db_conn()
+        conn.execute(f"""
+            INSERT INTO job (title, descrip, img_path, user_id) VALUES ('{title}', '{descrip}', '{img_path}', {session['user_id']});
+        """)
+        conn.commit()
+        conn.close()
+    else: 
+        flash("Error entering job", category='error')
+        return redirect(url_for('views.manage_jobs'))
+    
+    return redirect(url_for('views.manage_jobs'))
+
+@views.route('/delete_job', methods=['POST'])
+def delete_job():
+
+    job_id = request.form.get('name', None)
+
+    conn = get_db_conn()
+    conn.execute(f"""
+        DELETE FROM job WHERE id = {job_id};
+    """)
+    conn.commit()
+    conn.close()
+
+    return Response(status=204)

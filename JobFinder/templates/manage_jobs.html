@@ -2,36 +2,85 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container w-50">
     <h2>Create Job</h2>
-    <form action="./create_job" method="POST">
-        <label for="title">Job Titie: </label>
-        <input type="text" id="title" name="title">
+    <form action="./create_job" method="POST" class="" enctype="multipart/form-data">
+        <label for="title" class="form-label">Job Title: </label>
+        <input type="text" id="title" name="title" class="form-control">
         <br>
-        <label for="descrip">Description: </label>
-        <input type="text" id="descrip" name="descrip">
+        <label for="descrip" class="form-label">Description: </label>
+        <input type="text" id="descrip" name="descrip" class="form-control">
         <br>
-        <label for="image">Image: </label>
-        <input type="file" accept="image/png, image/jpeg">
+        <label for="image" class="form-label">Image: </label>
+        <input type="file" name="image" id="image" accept="image/png, image/jpeg, image/jpg" class="form-control">
         <br>
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
     </form>
 </div>
 
-{# Current Jobs #}
-<div class="container">
-    {% if jobs %}
-        <div class="card-deck overflow-y-auto m-auto" style="display:block;min-height:300px;max-height:600px;">
-            {% for job in jobs %}
-                <div class="card">
+<div class="card-deck overflow-y-auto w-50" style="display:block;min-height:200px;max-height:300px;">
+    <div class="row gy-1">
+    <h3>Jobs Posted: </h3>
+        {% if jobs %}
+        {% for job in jobs %}
+        {% set id = job['id']|string %}
+        {% set descripID = "descrip" ~ id %}
+        <div class="card m-2 border-0 shadow" style="min-height: 125px;max-width: 95%;">
+            <div class="row g-0 h-100">
+                <div class="col-md-3">
+                    <img src={{ url_for('static', filename='images/engineer.jpg') }} class="img-fluid rounded-start" alt=""
+                        style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
+                </div>
+                <div class="col-md-7">
                     <div class="card-body">
-                        <p class="card-title">{{ job['title'] }}</p>
-                        <p class='jobId' hidden>{{ job['job_id'] }}</p>
+                        <h5 class="card-title fw-bold jobTitle">{{ job['title'] }}</h5>
+                        <p class="jobId" hidden>{{ id }}</p>
+                        <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
                     </div>
                 </div>
-            {% endfor %}
+                <div class="col-md-2 flex-column d-flex">
+                    <button class="btn btn-danger mt-1 deleteJob">Delete</button>
+
+                    <button class="btn btn-secondary mt-1" data-bs-toggle="collapse" data-bs-target="#{{ descripID }}"
+                        aria-expanded="false">See More</button>
+                </div>
+                <div class="row">
+                    <div class="collapse multi-collapse" id="{{ descripID }}">
+                        <p class="card-text">{{ job['descrip'] }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
+        {% endfor %}
+        {% else %}
+        <h5 class="text-muted">No Jobs Listed.</h5>
+        {% endif%}
+    </div>
 </div>
+{# Current Jobs #}
+
 
 {% endblock %}
 
+{% block script %}
+<script>
+    document.querySelectorAll('.deleteJob').forEach(function(ele){
+        console.log(ele)
+        ele.addEventListener('click', function(event){
+            let card = event.target.parentElement.parentElement.parentElement;
+            let jobId = card.querySelector('.jobId').innerText;
+            const xhr = new XMLHttpRequest();
+
+            xhr.onload = function() {
+                location.reload();
+            }
+            xhr.open("POST", "/delete_job", true);
+            xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+            xhr.send('name=' + jobId);
+        });
+    });
+
+</script>
+{% endblock %}

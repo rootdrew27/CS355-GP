@@ -32,8 +32,8 @@ DFA - Done
 Create Job 
 Edit/Delete Job
 
-Apply for Job - Done
-Job Status
+Apply for Job - Good
+Job Status - Good
 
 Filter Jobs
 Search Jobs - Done
@@ -41,7 +41,9 @@ Search Jobs - Done
 Upload/Download Resume - Done
 Upload/Download Transcript - Done
 Edit Info - Done
-Saved Jobs
+Applied Jobs
+
+Department - fix jobs bug
 
 
 
@@ -58,7 +60,7 @@ Registration
 ========================================================================
 DEMO
 
-- Show Admin perspective
+- Show Admin perspective (email: rootydrew@gmail.com, password: password)
   - Edit Department
   - Create Job
 

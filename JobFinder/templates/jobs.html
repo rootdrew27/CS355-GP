@@ -73,21 +73,21 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">          
-          <p id="deptTitle" class="card-text"></p>
+          <p>Department: <span id="deptTitle" class="card-text"></span></p>
           <p>Posted By: <span id="posterName"></span></p>          
-          <p id="description" class="card-text"></p>
-          <p class="card-text"><small id="dateListed" class="text-body-secondary"></small></p>      
+          <p>Description: <span id="description" class="card-text"></span></p>
+          <p class="card-text">Posted on: <small id="dateListed" class="text-body-secondary"></small></p>
           <hr>               
           <form action="./apply" method="POST">
             <input type="number" id="jobId" name="jobId" hidden></input>
             <label for="coverL">Cover Letter: </label>
             <input type="textarea" id="coverL" name="coverL" rows="5" cols="20">
             <br>
-            {% set hasResume = 'checked' if session['path_to_r_file'] != None else "" %}
+            {% set hasResume = 'checked' if session['resume'] != 'None' else "" %}
             <label for="resume">Attach Resume</label>
             <input type="checkbox" id="resume" name="resume" {{ hasResume }}>
             <br>
-            {% set hasTranscript = 'checked' if session['path_to_t_file'] != None else "" %}
+            {% set hasTranscript = 'checked' if session['transcript'] != 'None' else "" %}
             <label for="transcript">Attach Transcript</label>
             <input type="checkbox" id="transcript" name="transcript" {{ hasTranscript }}>
             <br>
@@ -150,6 +150,7 @@
         req.send();
       });
     });
+
   });
   // document.querySelectorAll('.expand').forEach((btn) => {
   //   btn.addEventListener('click', (event) => {

@@ -82,12 +82,12 @@ def apply_for_job(job_id:int, with_transcript:bool, with_resume:bool):
             """
         )
 
-        if session['transcript'] != None and with_transcript:
+        if with_transcript and session['transcript'] != None:
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['transcript']), 'rb') as t:
                 file_data = t.read()
                 msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['transcript'])
 
-        if session['resume'] != None and with_resume:
+        if with_resume and session['resume'] != None:
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], session['resume']), 'rb') as r:
                 file_data = r.read()
                 msg.add_attachment(file_data, maintype='application', subtype='pdf', filename=session['resume'])
@@ -127,15 +127,22 @@ def validate_email(email:str) -> bool:
     
 def is_valid_password(password:str, repass=None) -> bool:
 
-    if len(password) > 5 and re.search('[^a-zA-Z]', password) != None:
-        if repass != None:
-            if password == repass:
-                return True
-            else:
-                flash('Passwords did NOT match!', category='error')
-                return False
-        else: 
-            return True
-    else:
-        flash('Invalid Password!', category='error') 
+    if len(password) <= 5:
+        flash('Password must have more than 5 characters!', category='error')
         return False
+
+    
+
+    if re.search('[^a-zA-Z]', password) == None:
+        flash('Password must contain at least one non-alpha character!', category='error')
+        return False
+
+    
+    if repass != None:
+        if password != repass:
+            flash('Passwords did NOT match!', category='error')
+            return False
+ 
+    
+    return True
+    

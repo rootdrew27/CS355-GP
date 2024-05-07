@@ -41,7 +41,7 @@
       </div>
     </main>
       <!--FOOTER-->
-    <footer class="footer mt-5 text-center text-white" style="background-color: #3f51b5;">
+    <footer class="footer mt-auto text-center text-white" style="background-color: #3f51b5;">
       <!-- Grid container -->
       <div class="container">
         <!-- Section: Links -->
@@ -51,7 +51,7 @@
             <!-- Grid column -->
             <div class="col-md-2">
               <h6 class="text-uppercase font-weight-bold">
-                <a href="" class="text-white">Home</a>
+                <a href={{ url_for('views.home') }} class="text-white">Home</a>
               </h6>
             </div>
             <div class="col-md-2">
@@ -77,10 +77,8 @@
           <div class="row d-flex justify-content-center">
             <div class="col-lg-8">
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                distinctio earum repellat quaerat voluptatibus placeat nam,
-                commodi optio pariatur est quia magnam eum harum corrupti
-                dicta, aliquam sequi voluptate quas.
+                <br>University of Wisconsin-Eau Claire
+                <br>105 Garfield Avenue | P.O. Box 4004 | Eau Claire, WI 54702-4004 | 715-836-4636
               </p>
             </div>
           </div>
@@ -89,14 +87,15 @@
   
       </div>
       <!-- Grid container -->
-
+  
+      
       <div
            class="text-center p-3"
            style="background-color: rgba(0, 0, 0, 0.2)"
            >
         
-        <a class="text-white" href="#"
-           >UWEC Student Job Finder</a>
+        <p class="text-white"
+           >UWEC Student Job Finder</p>
       </div>
      
     </footer>

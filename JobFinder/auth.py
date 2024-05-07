@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, session, redirect, flash, current_app
+from flask import Flask, render_template, request, url_for, session, redirect, flash, current_app, Response
 #from flask_session import Session
 from flask import Blueprint
 from werkzeug.utils import secure_filename, send_from_directory
@@ -140,8 +140,8 @@ def dfa():
             session['first_n'] = result['first_n']
             session['last_n'] = result['last_n']
             session['email'] = result['email']
-            session['transcript'] = str(result['path_to_t_file']).split('\\')[-1]
-            session['resume'] = str(result['path_to_r_file']).split('\\')[-1]
+            session['transcript'] = str(result['path_to_t_file']).split('\\')[-1] if result['path_to_t_file'] and len(result['path_to_t_file']) > 1 else 'None'
+            session['resume'] = str(result['path_to_r_file']).split('\\')[-1] if result['path_to_r_file'] and len(result['path_to_r_file']) > 1 else 'None'
             session['perm_lvl'] = result['permission_level']
                 
 
@@ -225,18 +225,21 @@ def upload_resume():
                 # delete old file (if it exists)
                 conn = get_db_conn()
                 r = conn.execute(
-                    f"""SELECT path_to_t_file FROM user WHERE email = '{email}';"""
+                    f"""SELECT path_to_r_file FROM user WHERE email = '{email}';"""
                 ).fetchall()
-                old_filename = r[0]['path_to_t_file']
-                if old_filename:
-                    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], old_filename))
+                old_path = r[0]['path_to_r_file']
 
-                resume.save(os.path.join(current_app.config['UPLOAD_FOLDER'], r_filename))
-                path_to_t_file = current_app.config['UPLOAD_FOLDER'] + r_filename
+                if old_path:
+                    os.remove(old_path)
+
+                new_path = os.path.join(current_app.config['UPLOAD_FOLDER'], r_filename)
+
+                resume.save(new_path)
+                path_to_r_file = new_path
 
                 # set the path_to_t_file
                 conn.execute(
-                    f"""UPDATE user SET path_to_t_file = '{path_to_t_file}' WHERE email = '{email}'"""
+                    f"""UPDATE user SET path_to_r_file = '{path_to_r_file}' WHERE email = '{email}'"""
                 )
                 conn.commit()
                 conn.close()
@@ -257,7 +260,7 @@ def upload_resume():
         return redirect(url_for('views.student_profile'))
 
 
-@auth.route('update_email', methods=["POST"])
+@auth.route('/update_email', methods=["POST"])
 def update_email():
     
     email = request.form['email']
@@ -286,7 +289,7 @@ def update_email():
         flash('Invalid Email!', category='error')
         return redirect(url_for('views.student_profile'))
     
-@auth.route('update_password', methods=["POST"])
+@auth.route('/update_password', methods=["POST"])
 def update_password():
     
     password = request.form['password']
@@ -313,3 +316,29 @@ def update_password():
 
     flash('Successfully updated password!')
     return redirect(url_for('views.student_profile'))
+
+# @auth.route('/delete_resume', methods=['POST', 'GET'])
+# def delete_resume():
+
+#     email = session['email']
+
+#     conn = get_db_conn()
+
+#     path = conn.execute(
+#         f"""SELECT path_to_r_file FROM user WHERE email = '{email}';"""
+#     ).fetchall()[0]['path_to_r_file']
+
+#     if path is None:
+#         return Response(status=205)
+
+#     os.remove(path)
+
+#     conn.execute(
+#         f"""UPDATE user SET path_to_r_file = NULL WHERE email = '{email}';"""
+#     )
+#     conn.commit()
+#     conn.close()
+
+#     session['resume'] = None
+
+#     return render_template('profile.html')

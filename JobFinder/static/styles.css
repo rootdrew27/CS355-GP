@@ -3,6 +3,11 @@
     font-size: 30px;
     color: white;
 }
+
+.navbar-brand:hover{
+    color:white;
+}
+
 .btn-primary, .btn-outline-primary{
     background-color: #3f51b5;
     color: white;
@@ -17,7 +22,13 @@
     
 }
 .nav-item{
-    font-size: 16px;
+    font-size: 20px;
+    font-weight:bold;
+    color:black
+}
+
+.nav-link:hover{
+    color:azure;
 }
 
 .expanded {

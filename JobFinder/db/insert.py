@@ -9,7 +9,7 @@ cur = connection.cursor()
 
 # cur.execute(f"INSERT INTO user (first_n, last_n, email, password, permission_level) VALUES ('Andrew', 'R', 'rootydrew@gmail.com', 'password', 1)")
 
-cur.execute(f"UPDATE department SET email = 'cs@uwec.edu' WHERE id = 1")
+# cur.execute(f"UPDATE department SET email = 'cs@uwec.edu' WHERE id = 1")
 
 
 connection.commit()

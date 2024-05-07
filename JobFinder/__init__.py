@@ -4,11 +4,13 @@ import os
 
 cd = os.getcwd()
 UPLOAD_FOLDER = cd + '\\JobFinder\\static\\user_files\\'
+IMAGE_FOLDER = '\\static\\images\\'
 
 def create_app() -> Flask: 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = b'DKFJSOFJ1342'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
 
     from .views import views
     from .auth import auth

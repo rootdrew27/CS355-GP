@@ -51,6 +51,7 @@
       </div>
       <hr>
       <div>
+        <p class="text-muted">Password must contain at least one non-alpha character!</p>
         <form action="./update_password" method="POST">
           <div class="col-sm-4">
             <label for="password">New Password</label>
@@ -64,6 +65,7 @@
           <button role="button" type="submit" class="btn btn-primary">Update Password</button>
         </form>
       </div>
+      {% if session['perm_lvl'] ==  1%}
       <hr>
       <div class="row">
         <div class="col-sm-4">
@@ -73,7 +75,7 @@
       </div>
       <hr>
       <div class="container">
-        <h5>Transcript</h5>
+        <h5>Transcript: <span class="h6">{{ session['transcript'] }}</span></h5>
         <div class="d-flex">
           <form action="./upload_transcript" method="POST" id="transcript_form" enctype="multipart/form-data" class="me-2">
             <label role="button" for="transcript" class="btn btn-primary">Upload Transcript</label>
@@ -84,7 +86,7 @@
           session['transcript'] }}>Download Transcript</a>
         </div>
 
-        <p>Transcript: {{ session['transcript'] }}</p>
+
         <br>
         <h5>Resume: <span class="h6">{{session['resume']}}</span></h5>
         <div class="d-flex">
@@ -93,12 +95,10 @@
             <input type="file" id="resume" name="resume" accept=".txt, .pdf" />
           </form>
           {% set resume = 'user_files/' ~ session['resume'] %}
-          <a role="button" class="btn btn-secondary me-2" href={{ url_for('static', filename=resume ) }} download={{
-            session['resume'] }}>Download Resume</a>
-          <a name="" id="delete-btn" class="btn btn-danger" href="#" role="button">Delete Resume</a>
-        </div>
+          <a role="button" class="btn btn-secondary me-2" href={{ url_for('static', filename=resume ) }} download={{ session['resume'] }}>Download Resume</a>
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
@@ -117,5 +117,6 @@
   u_resume.addEventListener('change', () => {
     r_form.submit();
   });
+
 </script>
 {% endblock %}
