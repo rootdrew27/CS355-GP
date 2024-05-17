@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {# <form class="d-flex">
+      <input type="text" class="form-control" placeholder="Search Jobs" style="width: 350px; margin-right: 5px;">
+      <button type="submit" class="btn btn-primary" style="margin-right: 15px;"> Search</button>
+  </form> #}
+  <!-- This loops through the jobs and creates the following html for each job-->
+  <div class="container mb-5">
+    <h3>Jobs</h3>
+    <hr>
+    <div class="container">
+      <div id="fitlers" class="">
+  
+      </div>
+      <div class="py-2 ms-auto" style="width:250px;">
+        <form class="form-inline">
+          <input class="form-control mr-sm-2" id="searchbar" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
+        </form>
+      </div>
+    </div>
+
+
+    <div class="card-deck overflow-y-auto m-auto" style="display:block;min-height:300px;max-height:600px;">
+      <div class="row w-100 gx-5 gy-1">
+      
+      {% for job in jobs %} 
+        {% set id = job['job_id']|string %}
+        {% set descripID = "descrip" ~ id %}
+        <div class="card m-2 border-0 shadow" style="min-height: 125px;max-width: 100%;">
+          <div class="row g-0 h-100">
+            <div class="col-md-3">
+              <img src="{{ job['img_path'] }}" class="img-fluid rounded-start" alt="" style="height: 200px; width: 100%; object-fit: fill;"> <!-- Optional image-->
+            </div>
+            <div class="col-md-7">
+              <div class="card-body">            
+                <h5 class="card-title fw-bold jobTitle">{{ job['job_title'] }}</h5>
+                <p class="jobId" hidden>{{ id }}</p>
+                <p class="card-text">Posted by: {{ job['first_n'] }} {{ job['last_n']}}</p>
+                {% if job['dept_title'] != None %}
+                  <p class="card-text">Department: <a href={{ url_for('views.department_profile', dept_id=job['dept_id']) }}>{{ job['dept_title'] }}</a></p>              
+                {% endif %}            
+                <p class="card-text"><small class="text-body-secondary">Posted: {{ job['date_listed'].format() }}</small></p>
+              </div>          
+            </div>
+            <div class="col-md-2 flex-column d-flex">
+                {% if job['job_id'] in jobsAppliedTo %}
+                  <button class="btn btn-success mt-5 m-2">Applied!</button>
+                {% else %}
+                  <button class="btn btn-primary apply mt-5 m-2" data-bs-toggle="modal" data-bs-target="#apply-modal">Apply</button>   <!-- Button trigger modal -->
+                {% endif %}
+
+              <button class="btn btn-secondary m-2" data-bs-toggle="collapse" data-bs-target="#{{ descripID }}" aria-expanded="false">See More</button>
+            </div>
+            <div class="row">
+              <div class="collapse multi-collapse" id="{{ descripID }}">
+                <p class="card-text">{{ job['job_descrip'] }}</p>
+            </div>
+          </div>            
+        </div>
+      </div>    
+    {% endfor %}
+    </div>
+  </div>
+</div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="apply-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="jobTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="jobTitle"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">          
+          <p>Department: <span id="deptTitle" class="card-text"></span></p>
+          <p>Posted By: <span id="posterName"></span></p>          
+          <p>Description: <span id="description" class="card-text"></span></p>
+          <p class="card-text">Posted on: <small id="dateListed" class="text-body-secondary"></small></p>
+          <hr>               
+          <form action="./apply" method="POST">
+            <input type="number" id="jobId" name="jobId" hidden></input>
+            <label for="coverL">Cover Letter: </label>
+            <input type="textarea" id="coverL" name="coverL" rows="5" cols="20">
+            <br>
+            {% set hasResume = 'checked' if session['resume'] != 'None' else "" %}
+            <label for="resume">Attach Resume</label>
+            <input type="checkbox" id="resume" name="resume" {{ hasResume }}>
+            <br>
+            {% set hasTranscript = 'checked' if session['transcript'] != 'None' else "" %}
+            <label for="transcript">Attach Transcript</label>
+            <input type="checkbox" id="transcript" name="transcript" {{ hasTranscript }}>
+            <br>
+            <br>
+            <button role="button" type="submit" class="btn btn-primary">Apply</button>
+          </form>          
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+  $(document).ready(function() {
+    $('#searchbar').on('keyup', function() {
+      var value = $(this).val().toLowerCase();
+      $('.card-deck .card').filter(function() {
+        $(this).toggle($(this).find('.jobTitle').text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+
+    //Modal vars
+    let jobId;
+    let jobIdEle = document.getElementById('jobId');
+    let titleEle = document.getElementById('jobTitle'); 
+    let descripEle = document.getElementById('description');
+    let dateListedEle = document.getElementById('dateListed');
+    let posterNameEle = document.getElementById('posterName');
+    let deptTitleEle = document.getElementById('deptTitle');
+
+    //Job Modal Event
+    document.querySelectorAll('.apply').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+
+        if ("{{ session['email'] }}" == ""){
+          location.href = './login';          
+        }
+
+        jobId = event.target.parentElement.parentElement.querySelector('.jobId').innerText;
+
+        const req = new XMLHttpRequest();
+
+        //Populate modal
+        req.addEventListener("load", () => {
+          let res = req.response;
+            titleEle.innerText = res['title'];
+            descripEle.innerText = res['descrip'];
+            dateListedEle.innerText = res['date_listed'];
+            posterNameEle.innerText = res['first_n'] + ' ' + res['last_n'];
+            deptTitleEle.innerText = res['dept_title'];
+            jobIdEle.value = res['job_id'];
+        });
+        req.open('GET', 'jobs/' + jobId);
+        req.responseType = 'json';
+        req.send();
+      });
+    });
+
+  });
+  // document.querySelectorAll('.expand').forEach((btn) => {
+  //   btn.addEventListener('click', (event) => {
+  //     let card = event.target.parentElement.parentElement.parentElement;
+  //     card.classList.toggle('expanded');
+  //     let hiddenText = card.querySelector('.hidden-text');
+  //     hiddenText.style.display = hiddenText.style.display === 'none' ? 'block' : 'none';
+  //   });
+  // });
+
+
+</script>
+{% endblock %}

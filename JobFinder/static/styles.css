@@ -1,0 +1,78 @@
+.navbar-brand{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    color: white;
+}
+
+.navbar-brand:hover{
+    color:white;
+}
+
+.btn-primary, .btn-outline-primary{
+    background-color: #3f51b5;
+    color: white;
+}
+.form-control{
+    border: 1px solid black;
+}
+
+#row1{
+    height: 500px;
+    background-color: lightblue;
+    
+}
+.nav-item{
+    font-size: 20px;
+    font-weight:bold;
+    color:black
+}
+
+.nav-link:hover{
+    color:azure;
+}
+
+.expanded {
+    transform: scale(1.2);
+}
+
+  .header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.profile {
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-info {
+    margin-bottom: 20px;
+}
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+main{
+    padding-bottom: 269px;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 269px;
+}

@@ -1,0 +1,78 @@
+Ruby/Megan
+ - register and login html
+McKenzie
+ - department html 
+ - started on final presentation powerpoint (shared with everyone)
+Andrew
+
+Ryan
+ - profile html page
+
+========================================================================
+General Tasks:
+  Job Listing Page
+    - Populate the apply modal using AJAX
+    - Add filters
+    - Add Search bar
+    - Style improvements
+
+  Profile Page
+   - Set up form to upload Resume/Transcript
+
+  Department Page
+    - 
+
+========================================================================
+Features CheckList: (Tasks that are complete are marked Done)
+
+Login - Done
+Register - Needs Testing
+DFA - Done
+
+Create Job 
+Edit/Delete Job
+
+Apply for Job - Good
+Job Status - Good
+
+Filter Jobs
+Search Jobs - Done
+
+Upload/Download Resume - Done
+Upload/Download Transcript - Done
+Edit Info - Done
+Applied Jobs
+
+Department - fix jobs bug
+
+
+
+========================================================================
+Future Plans:
+Registration 
+    Fname
+    lname
+    email (uwec.edu)
+    valid resume and transcript file type
+    Currently filenames may not be unique (plan: have a var keep track of the number of resumes/transcripts (or simply get it from the database) to ensure that filenames are unique)
+
+
+========================================================================
+DEMO
+
+- Show Admin perspective (email: rootydrew@gmail.com, password: password)
+  - Edit Department
+  - Create Job
+
+- Create student account roota5351@uwec.edu
+  - Show email constraint
+  - Show DFA token
+
+- Edit profile
+  - Change password
+  - Upload/Download Resume and Transcript
+
+- Apply for Jobs
+  - Show the email that is sent
+
+- Show Department Page

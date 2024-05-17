@@ -1,1 +1,6 @@
 tasks.txt
+
+./vscode
+./__pycache__
+
+secrets.json
